@@ -40,7 +40,7 @@ public class RoomRepository(DataAccess db) : IRoomRepository
 #pragma warning disable CA1416
                 command.Parameters.AddWithValue("?", number.ToDbValue());
                 command.Parameters.AddWithValue("?", hostelId.Value);
-                
+
                 using var adapter = new OleDbDataAdapter(command);
 #pragma warning restore CA1416
                 adapter.Fill(table);
@@ -49,11 +49,10 @@ public class RoomRepository(DataAccess db) : IRoomRepository
                     return Left<RepositoryError, Room>(new EntityNotFound($"Номер {number} в гостинице {hostelId}"));
 
                 DataRow row = table.Rows[0];
-            
+
                 return Right<RepositoryError, Room>(ConvertToDomain(row));
             })
-            .MapLeft(MapToDomainError)
-            .Bind(identity => identity);
+            .MapLeft(MapToDomainError);
     }
 
     /// <summary>

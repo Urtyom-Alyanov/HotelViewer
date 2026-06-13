@@ -15,7 +15,12 @@ public class Hostel
     public Address Address { get; private set; }
     public OrganizationId OrganizationId { get; private set; }
 
-    public Hostel(HostelId id, string name, PhoneNumber number, Address address, OrganizationId organizationId)
+    public Hostel(
+        HostelId id,
+        string name,
+        PhoneNumber number,
+        Address address,
+        OrganizationId organizationId)
     {
         Id = id;
         Name = name;
