@@ -2,6 +2,16 @@
 
 namespace HotelViewer.Domain.Entity;
 
+/// <summary>
+/// Вложенный ключ
+/// </summary>
+/// <param name="Number">Номер комнаты в отеле</param>
+/// <param name="HostelId">Идентификатор отеля</param>
+public record RoomId(RoomNumber Number, HostelId HostelId);
+
+/// <summary>
+/// Тип комнаты
+/// </summary>
 public enum RoomType
 {
     Standard = 1,
@@ -15,14 +25,12 @@ public enum RoomType
 /// </summary>
 public class Room
 {
-    public RoomNumber Number { get; private set; }
+    public RoomId RoomId { get; init; }
     public RoomType Type { get; private set; }
-    public HostelId HostelId { get; private set; }
 
-    public Room(RoomNumber number, HostelId hostelId, RoomType type)
+    public Room(RoomId roomId, RoomType type)
     {
-        Number = number;
+        RoomId = roomId;
         Type = type;
-        HostelId = hostelId;
     }
 }

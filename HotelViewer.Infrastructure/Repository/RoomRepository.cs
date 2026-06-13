@@ -14,10 +14,13 @@ public class RoomRepository(DataAccess db) : IRoomRepository
 
     private Room ConvertToDomain(DataRow row)
     {
+        var id = new RoomId(
+            RoomNumber.FromDbValue(Convert.ToInt32(row["Номер"])),
+            new HostelId(Convert.ToInt32(row["ИдентификаторГостиницы"]))
+        );
+        
         return new Room(
-            number: RoomNumber.FromDbValue(Convert.ToInt32(row["Номер"])),
-            hostelId: new HostelId(Convert.ToInt32(row["ИдентификаторГостиницы"])),
-            type: (RoomType)Convert.ToInt32(row["ТипНомера"])
+            id, (RoomType)Convert.ToInt32(row["ТипНомера"])
         );
     }
     
@@ -26,10 +29,10 @@ public class RoomRepository(DataAccess db) : IRoomRepository
     /// </summary>
     /// <param name="id">Сложный идентификатор состоящий из номера и идентификатора гостиницы</param>
     /// <returns>Комната</returns>
-    public Either<RepositoryError, Room> GetById((RoomNumber, HostelId) id)
+    public Either<RepositoryError, Room> GetById(RoomId id)
     {
-        var number = id.Item1;
-        var hostelId = id.Item2;
+        var number = id.Number;
+        var hostelId = id.HostelId;
 
         return db.ExecuteCommand(Query, command =>
             {
@@ -65,8 +68,8 @@ public class RoomRepository(DataAccess db) : IRoomRepository
             var table = new DataTable();
             
 #pragma warning disable CA1416
-            command.Parameters.AddWithValue("?", entity.Number.ToDbValue());
-            command.Parameters.AddWithValue("?", entity.HostelId.Value);
+            command.Parameters.AddWithValue("?", entity.RoomId.Number.ToDbValue());
+            command.Parameters.AddWithValue("?", entity.RoomId.HostelId.Value);
             
             using var adapter = new OleDbDataAdapter(command);
             using var builder = new OleDbCommandBuilder(adapter);
@@ -75,11 +78,12 @@ public class RoomRepository(DataAccess db) : IRoomRepository
             adapter.Fill(table);
             
             DataRow row;
+            
             if (table.Rows.Count == 0)
             {
                 row = table.NewRow();
-                row["Номер"] = entity.Number.ToDbValue();
-                row["ИдентификаторГостиницы"] = entity.HostelId.Value;
+                row["Номер"] = entity.RoomId.Number.ToDbValue();
+                row["ИдентификаторГостиницы"] = entity.RoomId.HostelId.Value;
                 table.Rows.Add(row);
             }
             else

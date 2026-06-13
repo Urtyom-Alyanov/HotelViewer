@@ -14,7 +14,7 @@ public interface IRepository<Entity, EntityId>
     public Either<RepositoryError, Entity> Save(Entity entity);
 }
 
-public interface IRoomRepository : IRepository<Room, (RoomNumber, HostelId)>;
+public interface IRoomRepository : IRepository<Room, RoomId>;
 public interface IHostelRepository : IRepository<Hostel, HostelId>;
 
 public interface IResidenceRepository : IRepository<Residence, ResidenceId>
