@@ -9,7 +9,7 @@ public class Organization
 {
     public OrganizationId Id { get; private set; }
     public string Name { get; private set; }
-    
+
     public Organization(OrganizationId id, string name)
     {
         Id = id;
