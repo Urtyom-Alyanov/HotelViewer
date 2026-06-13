@@ -4,7 +4,10 @@ namespace HotelViewer.Domain.Entity;
 
 public enum RoomType
 {
-    Looks
+    Standard = 1,
+    Suite = 2,
+    JuniorSuite = 3,
+    Presidential = 4
 }
 
 /// <summary>
@@ -16,10 +19,10 @@ public class Room
     public RoomType Type { get; private set; }
     public HostelId HostelId { get; private set; }
 
-    public Room(RoomNumber number, RoomType type, HostelId id)
+    public Room(RoomNumber number, HostelId hostelId, RoomType type)
     {
         Number = number;
         Type = type;
-        HostelId = id;
+        HostelId = hostelId;
     }
 }
