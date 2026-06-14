@@ -16,10 +16,10 @@ public class ResidentRepository(DataAccess db) : IResidentRepository
     {
         return new Resident(
             new ResidentId(Convert.ToInt32(row["ИдентификаторПроживающего"])),
-            FullName.FromDbValue(row["ФИО"].ToString()),
-            new Address(row["Адрес"].ToString()),
+            FullName.FromDbValue(row["ФИО"].ToString() ?? ""),
+            new Address(row["Адрес"].ToString() ?? ""),
             (Sex)Convert.ToInt32(row["Пол"]),
-            new PhoneNumber(row["НомерТелефона"].ToString())
+            new PhoneNumber(row["НомерТелефона"].ToString() ?? "")
             );
     }
 

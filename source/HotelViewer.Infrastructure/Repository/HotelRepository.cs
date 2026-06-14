@@ -16,9 +16,9 @@ public class HotelRepository(DataAccess db) : IHotelRepository
     {
         return new Hotel(
             id: new HostelId(Convert.ToInt32(row["ИдентификаторГостиницы"])),
-            name: row["ИдентификаторГостиницы"].ToString(),
-            address: new Address(row["Адрес"].ToString()),
-            number: new PhoneNumber(row["ТелефонДежурной"].ToString()),
+            name: row["ИдентификаторГостиницы"].ToString() ?? "",
+            address: new Address(row["Адрес"].ToString() ?? ""),
+            number: new PhoneNumber(row["ТелефонДежурной"].ToString() ?? ""),
             organizationId: new OrganizationId(Convert.ToInt32(row["ИдентификаторОрганизации"]))
             );
     }

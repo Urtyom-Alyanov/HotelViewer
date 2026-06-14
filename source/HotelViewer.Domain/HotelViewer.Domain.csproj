@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Argon2Sharp" Version="4.0.1" />
       <PackageReference Include="LanguageExt.Core" Version="5.0.0-beta-77" />
     </ItemGroup>
 

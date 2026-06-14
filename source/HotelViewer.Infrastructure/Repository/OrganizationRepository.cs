@@ -2,7 +2,6 @@
 using System.Data.OleDb;
 using HotelViewer.Domain.Entity;
 using HotelViewer.Domain.Repository;
-using HotelViewer.Domain.Value;
 using LanguageExt;
 using static LanguageExt.Prelude;
 
@@ -16,7 +15,7 @@ public class OrganizationRepository(DataAccess db) : IOrganizationRepository
     {
         return new Organization(
             new OrganizationId(Convert.ToInt32(row["ИдентификаторОрганизации"])),
-            row["Название"].ToString()
+            row["Название"].ToString() ?? ""
         );
     }
     
