@@ -2,4 +2,4 @@
 
 namespace HotelViewer.Domain.Repository;
 
-public interface IHostelRepository : IRepository<Hostel, HostelId>;
+public interface IHotelRepository : IRepository<Hotel, HostelId>;

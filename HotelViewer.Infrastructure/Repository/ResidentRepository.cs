@@ -8,22 +8,22 @@ using static LanguageExt.Prelude;
 
 namespace HotelViewer.Infrastructure.Repository;
 
-public class HotelRepository(DataAccess db) : IHotelRepository
+public class ResidentRepository(DataAccess db) : IResidentRepository
 {
-    private const string Query = "SELECT * FROM Гостиница WHERE ИдентификаторГостиницы = ?";
-
-    private Hotel ConvertToDomain(DataRow row)
+    private const string Query = "SELECT * FROM Проживающий WHERE ИдентификаторПроживающего = ?";
+    
+    private Resident ConvertToDomain(DataRow row)
     {
-        return new Hotel(
-            id: new HostelId(Convert.ToInt32(row["ИдентификаторГостиницы"])),
-            name: row["ИдентификаторГостиницы"].ToString(),
-            address: new Address(row["Адрес"].ToString()),
-            number: new PhoneNumber(row["ТелефонДежурной"].ToString()),
-            organizationId: new OrganizationId(Convert.ToInt32(row["ИдентификаторОрганизации"]))
+        return new Resident(
+            new ResidentId(Convert.ToInt32(row["ИдентификаторПроживающего"])),
+            FullName.FromDbValue(row["ФИО"].ToString()),
+            new Address(row["Адрес"].ToString()),
+            (Sex)Convert.ToInt32(row["Пол"]),
+            new PhoneNumber(row["НомерТелефона"].ToString())
             );
     }
-    
-    public Either<RepositoryError, Hotel> GetById(HostelId id)
+
+    public Either<RepositoryError, Resident> GetById(ResidentId id)
     {
         return db.ExecuteCommand(Query, command =>
         {
@@ -36,15 +36,15 @@ public class HotelRepository(DataAccess db) : IHotelRepository
             adapter.Fill(table);
             
             if (table.Rows.Count == 0)
-                return Left<RepositoryError, Hotel>(new EntityNotFound(id));
+                return Left<RepositoryError, Resident>(new EntityNotFound(id));
 
             DataRow row = table.Rows[0];
             
-            return Right<RepositoryError, Hotel>(ConvertToDomain(row));
+            return Right<RepositoryError, Resident>(ConvertToDomain(row));
         }).MapLeft(MapToDomainError);
     }
 
-    public Either<RepositoryError, Hotel> Save(Hotel entity)
+    public Either<RepositoryError, Resident> Save(Resident entity)
     {
         return db.ExecuteCommand(Query, command =>
             {
@@ -64,7 +64,7 @@ public class HotelRepository(DataAccess db) : IHotelRepository
                 if (table.Rows.Count == 0)
                 {
                     row = table.NewRow();
-                    row["ИдентификаторГостиницы"] = entity.Id.Value;
+                    row["ИдентификаторПроживающего"] = entity.Id.Value;
                     table.Rows.Add(row);
                 }
                 else
@@ -72,10 +72,10 @@ public class HotelRepository(DataAccess db) : IHotelRepository
                     row = table.Rows[0];
                 }
             
-                row["ТелефонДежурной"] = entity.Number.Value;
+                row["НомерТелефона"] = entity.PhoneNumber.Value;
                 row["Адрес"] = entity.Address.Value;
-                row["Название"] = entity.Name;
-                row["ИдентификторОрганизации"] = entity.OrganizationId.Value;
+                row["ФИО"] = entity.Name.ToDbValue();
+                row["Пол"] = (int)entity.Sex;
             
                 return db.SaveData(table, Query)
                     .MapLeft(MapToDomainError)

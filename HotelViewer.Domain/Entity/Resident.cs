@@ -15,7 +15,12 @@ public class Resident
     public Sex Sex { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
 
-    public Resident(ResidentId id, FullName name, Address address, Sex sex, PhoneNumber phoneNumber)
+    public Resident(
+        ResidentId id,
+        FullName name,
+        Address address,
+        Sex sex,
+        PhoneNumber phoneNumber)
     {
         Id = id;
         Name = name;

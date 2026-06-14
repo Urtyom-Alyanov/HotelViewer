@@ -8,22 +8,19 @@ using static LanguageExt.Prelude;
 
 namespace HotelViewer.Infrastructure.Repository;
 
-public class HotelRepository(DataAccess db) : IHotelRepository
+public class OrganizationRepository(DataAccess db) : IOrganizationRepository
 {
-    private const string Query = "SELECT * FROM Гостиница WHERE ИдентификаторГостиницы = ?";
-
-    private Hotel ConvertToDomain(DataRow row)
+    private const string Query = "SELECT * FROM Организация WHERE ИдентификаторОрганизации = ?";
+    
+    private Organization ConvertToDomain(DataRow row)
     {
-        return new Hotel(
-            id: new HostelId(Convert.ToInt32(row["ИдентификаторГостиницы"])),
-            name: row["ИдентификаторГостиницы"].ToString(),
-            address: new Address(row["Адрес"].ToString()),
-            number: new PhoneNumber(row["ТелефонДежурной"].ToString()),
-            organizationId: new OrganizationId(Convert.ToInt32(row["ИдентификаторОрганизации"]))
-            );
+        return new Organization(
+            new OrganizationId(Convert.ToInt32(row["ИдентификаторОрганизации"])),
+            row["Название"].ToString()
+        );
     }
     
-    public Either<RepositoryError, Hotel> GetById(HostelId id)
+    public Either<RepositoryError, Organization> GetById(OrganizationId id)
     {
         return db.ExecuteCommand(Query, command =>
         {
@@ -36,15 +33,15 @@ public class HotelRepository(DataAccess db) : IHotelRepository
             adapter.Fill(table);
             
             if (table.Rows.Count == 0)
-                return Left<RepositoryError, Hotel>(new EntityNotFound(id));
+                return Left<RepositoryError, Organization>(new EntityNotFound(id));
 
             DataRow row = table.Rows[0];
             
-            return Right<RepositoryError, Hotel>(ConvertToDomain(row));
+            return Right<RepositoryError, Organization>(ConvertToDomain(row));
         }).MapLeft(MapToDomainError);
     }
 
-    public Either<RepositoryError, Hotel> Save(Hotel entity)
+    public Either<RepositoryError, Organization> Save(Organization entity)
     {
         return db.ExecuteCommand(Query, command =>
             {
@@ -64,7 +61,7 @@ public class HotelRepository(DataAccess db) : IHotelRepository
                 if (table.Rows.Count == 0)
                 {
                     row = table.NewRow();
-                    row["ИдентификаторГостиницы"] = entity.Id.Value;
+                    row["ИдентификаторОрганизации"] = entity.Id.Value;
                     table.Rows.Add(row);
                 }
                 else
@@ -72,11 +69,8 @@ public class HotelRepository(DataAccess db) : IHotelRepository
                     row = table.Rows[0];
                 }
             
-                row["ТелефонДежурной"] = entity.Number.Value;
-                row["Адрес"] = entity.Address.Value;
                 row["Название"] = entity.Name;
-                row["ИдентификторОрганизации"] = entity.OrganizationId.Value;
-            
+                
                 return db.SaveData(table, Query)
                     .MapLeft(MapToDomainError)
                     .Map(_ => entity);

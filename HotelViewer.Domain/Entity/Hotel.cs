@@ -7,7 +7,7 @@ public record HostelId(int Value);
 /// <summary>
 /// Отель
 /// </summary>
-public class Hostel
+public class Hotel
 {
     public HostelId Id { get; private set; }
     public string Name { get; private set; }
@@ -15,7 +15,7 @@ public class Hostel
     public Address Address { get; private set; }
     public OrganizationId OrganizationId { get; private set; }
 
-    public Hostel(
+    public Hotel(
         HostelId id,
         string name,
         PhoneNumber number,

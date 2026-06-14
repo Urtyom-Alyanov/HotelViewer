@@ -11,7 +11,6 @@ namespace HotelViewer.Infrastructure.Repository;
 public class ResidenceRepository(DataAccess db) : IResidenceRepository
 {
     private const string Query = "SELECT * FROM Проживание WHERE ИдентификаторПроживания = ?";
-    private const string QueryByRoom = "SELECT * FROM Проживание WHERE ИдентификаторПроживания = ? AND Номер = ? AND ИдентификаторГостиницы = ?";
 
     private Residence ConvertToDomain(DataRow row)
     {
