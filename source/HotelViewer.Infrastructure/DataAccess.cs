@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Data.OleDb;
+using System.Text.RegularExpressions;
 using LanguageExt;
 using static LanguageExt.Prelude;
 
@@ -7,7 +8,7 @@ namespace HotelViewer.Infrastructure;
 
 public abstract record DataAccessError(string Message);
 
-public record DriverNotInstalled() : DataAccessError("Драйвер базы данных не установлен (Требуется Microsoft.ACE.OLEDB.12.0)");
+public record DriverNotInstalled() : DataAccessError("Драйвер базы данных не установлен (требуется Microsoft Access Database Engine 2007 или новее)");
 public record NormalOperatingSystem() : DataAccessError("Установлена нормальная ОС! Установите ОС Windows и запустите приложение там.");
 public record DatabaseConnectionError(Exception Ex) : DataAccessError($"Ошибка подключения к БД: {Ex.Message}");
 public record QueryExecutionError(string Query, Exception Ex) : DataAccessError($"Ошибка выполнения запроса [{Query}]: {Ex.Message}");
@@ -19,17 +20,18 @@ public record FileNotFoundError(string path) : DataAccessError($"Файл баз
 /// </summary>
 public class DataAccess
 {
-    private const string DatabaseProvider = "Microsoft.ACE.OLEDB.12.0";
+    private static readonly Regex ProviderRegex = new(@"^Microsoft\.ACE\.OLEDB\.(\d+\.\d+)$",RegexOptions.Compiled | RegexOptions.IgnoreCase);
     private readonly string _connectionString;
 
-    private DataAccess(string databasePath)
+    private DataAccess(string databasePath, string provider)
     {
-        _connectionString = $"Provider={DatabaseProvider};Data Source={databasePath};Persist Security Info=False;";
+        _connectionString = $"Provider={provider};Data Source={databasePath};Persist Security Info=False;";
     }
 
 
     /// <summary>
     /// Создание подключения к базе данных.
+    /// Получает самого нового провайдера для OleDb M$ Access.
     /// На нормальных ОС не работает, только на Windows.
     /// </summary>
     /// <param name="databasePath">Путь к базе данных MS Access</param>
@@ -47,11 +49,26 @@ public class DataAccess
             var enumerator = new OleDbEnumerator();
             var dataTable = enumerator.GetElements();
 
-            var isInstalled = dataTable.AsEnumerable()
-                .Any(dataRow => dataRow["SOURCES_NAME"]?.ToString() == DatabaseProvider);
+            var installedProvider = dataTable.AsEnumerable()
+                .Select(dataRow => dataRow["SOURCES_NAME"]?.ToString())
+                .Where(name => name != null)
+                .Select(name => 
+                {
+                    var match = ProviderRegex.Match(name!);
+                    return new 
+                    { 
+                        FullName = name, 
+                        IsValid = match.Success, 
+                        Version = match.Success ? Version.Parse(match.Groups[1].Value) : new Version(0, 0) 
+                    };
+                })
+                .Where(x => x.IsValid)
+                .OrderByDescending(x => x.Version)
+                .Select(x => x.FullName)
+                .FirstOrDefault();
 
-            return isInstalled
-                ? Right<DataAccessError, DataAccess>(new DataAccess(databasePath))
+            return installedProvider != null
+                ? Right<DataAccessError, DataAccess>(new DataAccess(databasePath, installedProvider))
                 : Left<DataAccessError, DataAccess>(new DriverNotInstalled());
         }
         catch (Exception ex)
