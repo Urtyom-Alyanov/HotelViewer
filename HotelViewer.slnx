@@ -1,0 +1,6 @@
+﻿<Solution>
+    <Folder Name="/source/">
+        <Project Path="source/HotelViewer.Domain/HotelViewer.Domain.csproj" />
+        <Project Path="source/HotelViewer.Infrastructure/HotelViewer.Infrastructure.csproj" />
+    </Folder>
+</Solution>
