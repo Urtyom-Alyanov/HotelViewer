@@ -31,7 +31,7 @@ public class User
 {
     public Username Username { get; private set; }
     public UserRole Role { get; private set; }
-    
+
     public byte[] PasswordHash { get; private set; }
     public byte[] PasswordSalt { get; private set; }
 
@@ -63,15 +63,15 @@ public class User
         var salt = Argon2.GenerateSalt();
         var argonParams = Argon2Parameters.CreateDefault() with { Salt = salt };
         var argon2 = new Argon2(argonParams);
-        
+
         var passwordBytes = Encoding.UTF8.GetBytes(newPassword).AsSpan();
-        
+
         var hash = argon2.Hash(passwordBytes);
-        
+
         PasswordHash = hash;
         PasswordSalt = salt;
     }
-    
+
     /// <summary>
     /// Проверить пароль
     /// </summary>

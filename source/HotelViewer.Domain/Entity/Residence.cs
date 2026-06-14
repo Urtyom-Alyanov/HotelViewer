@@ -10,11 +10,11 @@ public record ResidenceId(int Value);
 public class Residence
 {
     public ResidenceId ResidenceId { get; private set; }
-    
+
     public RoomNumber Number { get; private set; }
     public HostelId HostelId { get; private set; }
     public ResidentId ResidentId { get; private set; }
-    
+
     public uint DaysPerNight { get; private set; }
     public DateTime ResidenceAt { get; private set; }
 
