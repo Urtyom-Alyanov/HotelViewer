@@ -41,7 +41,8 @@ public class ResidentRepository(DataAccess db) : IResidentRepository
             DataRow row = table.Rows[0];
             
             return Right<RepositoryError, Resident>(ConvertToDomain(row));
-        }).MapLeft(MapToDomainError);
+        }).MapLeft(MapToDomainError)
+        .Bind(identity => identity);
     }
 
     public Either<RepositoryError, Resident> Save(Resident entity)

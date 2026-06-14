@@ -40,7 +40,8 @@ public class UserRepository(DataAccess db) : IUserRepository
 
                 return Right<RepositoryError, User>(ConvertToDomain(row));
             })
-            .MapLeft(MapToDomainError);
+            .MapLeft(MapToDomainError)
+            .Bind(identity => identity);
     }
 
     public Either<RepositoryError, User> Save(User entity)

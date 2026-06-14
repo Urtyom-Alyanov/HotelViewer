@@ -52,7 +52,8 @@ public class RoomRepository(DataAccess db) : IRoomRepository
 
                 return Right<RepositoryError, Room>(ConvertToDomain(row));
             })
-            .MapLeft(MapToDomainError);
+            .MapLeft(MapToDomainError)
+            .Bind(identity => identity);
     }
 
     /// <summary>

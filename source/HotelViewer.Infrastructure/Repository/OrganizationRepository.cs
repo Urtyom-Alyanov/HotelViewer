@@ -37,7 +37,8 @@ public class OrganizationRepository(DataAccess db) : IOrganizationRepository
             DataRow row = table.Rows[0];
             
             return Right<RepositoryError, Organization>(ConvertToDomain(row));
-        }).MapLeft(MapToDomainError);
+        }).MapLeft(MapToDomainError)
+        .Bind(identity => identity);
     }
 
     public Either<RepositoryError, Organization> Save(Organization entity)

@@ -42,7 +42,8 @@ public class ResidenceRepository(DataAccess db) : IResidenceRepository
             DataRow row = table.Rows[0];
             
             return Right<RepositoryError, Residence>(ConvertToDomain(row));
-        }).MapLeft(MapToDomainError);
+        }).MapLeft(MapToDomainError)
+        .Bind(identity => identity);
     }
 
     public Either<RepositoryError, Residence> Save(Residence entity)
