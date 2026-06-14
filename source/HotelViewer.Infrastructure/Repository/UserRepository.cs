@@ -72,8 +72,8 @@ public class UserRepository(DataAccess db) : IUserRepository
                     row = table.Rows[0];
                 }
             
-                row["ХэшПароля"] = entity.PasswordHash;
-                row["СольПароля"] = entity.PasswordSalt;
+                row["ХэшПароля"] = Convert.ToBase64String(entity.PasswordHash);
+                row["СольПароля"] = Convert.ToBase64String(entity.PasswordSalt);
                 row["Роль"] = (int)entity.Role;
             
                 return db.SaveData(table, Query)
