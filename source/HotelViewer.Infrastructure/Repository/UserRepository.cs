@@ -1,105 +1,54 @@
-﻿using System.Data;
-using System.Data.OleDb;
 using HotelViewer.Domain.Entity;
 using HotelViewer.Domain.Repository;
+using HotelViewer.Infrastructure.Mappers;
 using LanguageExt;
 using static LanguageExt.Prelude;
 
 namespace HotelViewer.Infrastructure.Repository;
 
-public class UserRepository(DataAccess db) : IUserRepository
-{
-    private const string Query = "SELECT * FROM Пользователь WHERE ИмяПользователя = ?";
-    
-    private User ConvertToDomain(DataRow row)
-    {
-        return new User(
-            new Username(row["ИмяПользователя"].ToString() ?? ""),
-            Convert.FromBase64String(row["ХэшПароля"].ToString() ?? ""),
-            Convert.FromBase64String(row["СольПароля"].ToString() ?? ""),
-            (UserRole)Convert.ToInt32(row["Роль"].ToString())
-        );
-    }
-    
-    public Either<RepositoryError, User> GetById(Username username)
-    {
-        return db.ExecuteCommand(Query, command =>
-            {
-                var table = new DataTable();
-#pragma warning disable CA1416
-                command.Parameters.AddWithValue("?", username.Value);
+public class UserRepository(DataAccess db) : IUserRepository {
+  private const string Query = "SELECT * FROM Пользователь WHERE ИмяПользователя = ?";
 
-                using var adapter = new OleDbDataAdapter(command);
-#pragma warning restore CA1416
-                adapter.Fill(table);
+  /// <summary>
+  /// Поиск по имени пользователя
+  /// </summary>
+  /// <param name="username">Имя пользователя</param>
+  /// <returns>Пользователь</returns>
+  public Either<RepositoryError, User> FindById(Username username) {
+    return db
+      .LoadTable(Query, username.Value)
+      .MapLeft(DataAccessErrorToRepositoryErrorMapper.Map)
+      .Bind(table =>
+        table.Rows.Count == 0
+          ? Left<RepositoryError, User>(new EntityNotFound<Username>(username))
+          : Right<RepositoryError, User>(UserMapper.MapFromDb(table.Rows[0]))
+      );
+  }
 
-                if (table.Rows.Count == 0)
-                    return Left<RepositoryError, User>(new EntityNotFound(username));
+  /// <summary>
+  /// Сохранить пользователя
+  /// </summary>
+  /// <param name="entity">Пользователь</param>
+  /// <returns>Ошибка или пустота</returns>
+  public Either<RepositoryError, Unit> Save(User entity) {
+    return db
+      .LoadTable(Query, entity.Username.Value)
+      .Map(table => UserMapper.MapIntoDb(entity, table))
+      .Bind(table => db.SaveTable(Query, table))
+      .MapLeft(DataAccessErrorToRepositoryErrorMapper.Map);
+  }
 
-                DataRow row = table.Rows[0];
-
-                return Right<RepositoryError, User>(ConvertToDomain(row));
-            })
-            .MapLeft(MapToDomainError)
-            .Bind(identity => identity);
-    }
-
-    public Either<RepositoryError, User> Save(User entity)
-    {
-        return db.ExecuteCommand(Query, command =>
-            {
-                var table = new DataTable();
-            
-#pragma warning disable CA1416
-                command.Parameters.AddWithValue("?", entity.Username.Value);
-            
-                using var adapter = new OleDbDataAdapter(command);
-                using var builder = new OleDbCommandBuilder(adapter);
-#pragma warning restore CA1416
-            
-                adapter.Fill(table);
-            
-                DataRow row;
-            
-                if (table.Rows.Count == 0)
-                {
-                    row = table.NewRow();
-                    row["ИмяПользователя"] = entity.Username.Value;
-                    table.Rows.Add(row);
-                }
-                else
-                {
-                    row = table.Rows[0];
-                }
-            
-                row["ХэшПароля"] = Convert.ToBase64String(entity.PasswordHash);
-                row["СольПароля"] = Convert.ToBase64String(entity.PasswordSalt);
-                row["Роль"] = (int)entity.Role;
-            
-                return db.SaveData(table, Query)
-                    .MapLeft(MapToDomainError)
-                    .Map(_ => entity);
-            })
-            .MapLeft(MapToDomainError)
-            .Bind(identity => identity);
-    }
-
-    public Either<RepositoryError, User> FindByCredentials(Username username, string password)
-    {
-        return GetById(username).Bind(user =>
-        {
-            if (user.VerifyPassword(password))
-            {
-                return Right(user);
-            }
-            return Left<RepositoryError, User>(new EntityNotFound(username));
-        });
-    }
-    
-    private RepositoryError MapToDomainError(DataAccessError error) => error switch
-    {
-        DatabaseConnectionError dbErr => new InfrastructureFault($"Нет связи с файлом Access. {dbErr.Ex.Message}"),
-        QueryExecutionError qErr => new InfrastructureFault($"Кривой SQL запрос. {qErr.Ex.Message}"),
-        _ => new InfrastructureFault(error.Message)
-    };
+  /// <summary>
+  /// Поиск пользователя по учётным данным
+  /// </summary>
+  /// <param name="username">Имя пользователя</param>
+  /// <param name="password">Пароль</param>
+  /// <returns>Пользователь</returns>
+  public Either<RepositoryError, User> FindByCredentials(Username username, string password) {
+    return FindById(username).Bind(user => {
+      if (user.VerifyPassword(password))
+        return Right(user);
+      return Left<RepositoryError, User>(new EntityNotFound<Username>(username));
+    });
+  }
 }

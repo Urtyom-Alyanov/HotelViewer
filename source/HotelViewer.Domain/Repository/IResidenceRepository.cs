@@ -1,4 +1,4 @@
-﻿using HotelViewer.Domain.Entity;
+using HotelViewer.Domain.Entity;
 using HotelViewer.Domain.Value;
 using LanguageExt;
 

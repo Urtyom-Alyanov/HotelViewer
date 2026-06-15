@@ -1,7 +1,6 @@
-﻿namespace HotelViewer.Domain.Value;
+namespace HotelViewer.Domain.Value;
 
-public enum Sex
-{
-    Male,
-    Female
+public enum Sex {
+  Male,
+  Female
 }
