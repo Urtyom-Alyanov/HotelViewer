@@ -1,4 +1,6 @@
 using System.Data;
+using System.Linq.Expressions;
+using LanguageExt;
 
 namespace HotelViewer.Infrastructure.Mappers;
 
@@ -21,4 +23,18 @@ public interface IEntityMapper<TEntity> {
   /// <param name="table">Тапблица из базы данных</param>
   /// <returns>Сырые данные для базы данных</returns>
   public static abstract DataTable MapIntoDb(TEntity entity, DataTable table);
+
+  /// <summary>
+  /// Получить имя столбца в базе данных
+  /// </summary>
+  /// <param name="propertyName">Имя свойства</param>
+  /// <returns>Имя колонки</returns>
+  public static abstract Option<string> MapPropertyIntoDbColumn<TValue>(Expression<Func<TEntity, TValue>> propertySelector);
+
+  /// <summary>
+  /// Получить имя свойства домена
+  /// </summary>
+  /// <param name="columnName">Имя колонки</param>
+  /// <returns>Имя свойства</returns>
+  public static abstract Option<string> MapDbColumnIntoProperty(string columnName);
 }

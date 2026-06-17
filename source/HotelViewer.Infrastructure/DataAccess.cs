@@ -140,4 +140,20 @@ public class DataAccess {
 #pragma warning restore CA1416
     return unit;
   });
+
+  /// <summary>
+  /// Исполнить мутацию базы данных
+  /// </summary>
+  /// <param name="query">Запрос</param>
+  /// <param name="parameters">Параметры</param>
+  /// <returns>Количество мутаций</returns>
+  public Either<DataAccessError, int> Mutate(string query, params object[] parameters) =>
+    ExecuteCommand(query, command => {
+#pragma warning disable CA1416
+      command.Parameters.AddRange(
+        parameters.Select(p => new OleDbParameter("?", p ?? DBNull.Value)).ToArray()
+      );
+      return command.ExecuteNonQuery();
+#pragma warning restore CA1416
+    });
 }
