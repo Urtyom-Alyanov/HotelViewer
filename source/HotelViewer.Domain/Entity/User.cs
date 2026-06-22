@@ -52,6 +52,12 @@ public class User {
   }
 
   /// <summary>
+  /// Задать новую роль
+  /// </summary>
+  /// <param name="role">Роль</param>
+  public void SetNewRole(UserRole role) => Role = role;
+
+  /// <summary>
   /// Задать новый пароль пользователю
   /// </summary>
   /// <param name="newPassword">Новый пароль</param>

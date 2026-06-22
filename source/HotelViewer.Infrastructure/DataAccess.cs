@@ -26,7 +26,6 @@ public class DataAccess {
     _connectionString = $"Provider={provider};Data Source={databasePath};Persist Security Info=False;";
   }
 
-
   /// <summary>
   /// Создание подключения к базе данных.
   /// Получает самого нового провайдера для OleDb M$ Access.
