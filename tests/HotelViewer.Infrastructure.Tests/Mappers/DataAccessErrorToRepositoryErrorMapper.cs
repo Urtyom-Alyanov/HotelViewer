@@ -4,6 +4,8 @@ using HotelViewer.Infrastructure;
 using HotelViewer.Infrastructure.Mappers;
 using HotelViewer.Domain.Repository;
 
+namespace HotelViewer.Infrastructure.Mappers;
+
 public class DataAccessErrorToRepositoryErrorMapperTests
 {
     [Fact]
