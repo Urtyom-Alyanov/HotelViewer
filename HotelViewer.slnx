@@ -3,8 +3,11 @@
         <Project Path="source/HotelViewer.Application/HotelViewer.Application.csproj" />
         <Project Path="source/HotelViewer.Domain/HotelViewer.Domain.csproj" />
         <Project Path="source/HotelViewer.Infrastructure/HotelViewer.Infrastructure.csproj" />
+        <Project Path="source/HotelViewer.Presentation/HotelViewer.Presentation.csproj" />
     </Folder>
     <Folder Name="/tests/">
+        <Project Path="tests/HotelViewer.Application.Tests/HotelViewer.Application.Tests.csproj" />
+        <Project Path="tests/HotelViewer.Domain.Tests/HotelViewer.Domain.Tests.csproj" />
         <Project Path="tests/HotelViewer.Infrastructure.Tests/HotelViewer.Infrastructure.Tests.csproj" />
     </Folder>
 </Solution>
