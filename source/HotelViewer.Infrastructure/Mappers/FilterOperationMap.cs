@@ -9,6 +9,7 @@ public static class FilterOperationMapper {
   /// <summary>
   /// Преобразует доменный оператор фильтрации в SQL-оператор для MS Access
   /// </summary>
+  /// <param name="op">Оператор</param>
   public static Option<string> Map(FilterOp op) => op switch {
     FilterOp.Eq => Some("="),
     FilterOp.Like => Some("LIKE"),
@@ -18,6 +19,21 @@ public static class FilterOperationMapper {
     FilterOp.LtEq => Some("<="),
     FilterOp.In => Some("IN"),
     _ => None
+  };
+
+  /// <summary>
+  /// Генерация мест для посадки значений
+  /// </summary>
+  /// <param name="op">Оператор</param>
+  /// <param name="count">Количество</param>
+  /// <returns>Строка с операторами</returns>
+  public static string MapPlaceholders(FilterOp op, Option<uint> count) => op switch {
+    FilterOp.In => count
+      .Match(
+        countUnwrapped => $"({string.Join(", ", Enumerable.Repeat("?", (int)countUnwrapped))})",
+        () => "?"
+        ),
+    _ => "?"
   };
 
   /// <summary>
@@ -37,12 +53,12 @@ public static class FilterOperationMapper {
     );
 
     if (toDbMethod != null)
-      return toDbMethod.Invoke(value, null);
+      return toDbMethod.Invoke(value, null) ?? DBNull.Value;
 
     var valueProperty = type.GetProperty("Value", BindingFlags.Public | BindingFlags.Instance);
 
     if (valueProperty != null)
-      return valueProperty.GetValue(value);
+      return valueProperty.GetValue(value) ?? DBNull.Value;
 
     return value;
   }

@@ -6,7 +6,9 @@ using static LanguageExt.Prelude;
 
 namespace HotelViewer.Infrastructure.Helpers;
 
-public record QueryWithParameters(string Sql, object Parameters);
+public record QueryWithParameters(string Sql, object[] Parameters);
+
+record ClauseWithParameters(string Clause, IEnumerable<object> Parameters);
 
 public class QueryBuilder<TEntity>(
   string baseQuery,
@@ -18,7 +20,7 @@ public class QueryBuilder<TEntity>(
   /// <param name="sort">Сортировка по критерию</param>
   /// <param name="limit">Количество запрашиваемоего</param>
   /// <param name="offset">Отступ</param>
-  /// <returns>Строка с запросом</returns>
+  /// <returns>Строка с запросом и параметры к ней</returns>
   public QueryWithParameters Build(
     Option<Filter<TEntity>> filter,
     Option<Sort<TEntity>> sort,
@@ -27,22 +29,34 @@ public class QueryBuilder<TEntity>(
   ) {
     var filterData = filter
       .Map(f => f.Criteria
-        .Select(c =>
-          from col in propertyMap(c.PropertySelector)
-          from op in FilterOperationMapper.Map(c.Op)
-          select (
-            Clause: $"{col} {op} ?",
-            Value: FilterOperationMapper.MapValue(c.Op, c.Value)
-          ))
+        .Select(c => (from col in propertyMap(c.PropertySelector)
+          from opStr in FilterOperationMapper.Map(c.Op)
+          select (col, opStr, c.Op, c.Value)))
         .Somes()
+        .Select(tuple => {
+          var val = FilterOperationMapper.MapValue(tuple.Op, tuple.Value);
+
+          Option<uint> count = (tuple.Op == FilterOp.In && val is System.Collections.Generic.IList<object> l)
+            ? Some((uint)l.Count)
+            : None;
+
+          var placeholder = FilterOperationMapper.MapPlaceholders(tuple.Op, count);
+
+          return new ClauseWithParameters(
+            $"{tuple.col} {tuple.opStr} {placeholder}",
+            (val is IEnumerable<object> list && tuple.Op == FilterOp.In)
+              ? list
+              : [val]
+          );
+        })
         .ToList())
-      .IfNone(new List<(string Clause, object Value)>());
+      .IfNone([]);
 
     var whereSql = filterData.Count > 0
       ? " WHERE " + string.Join(" AND ", filterData.Select(x => x.Clause))
       : "";
 
-    var parameters = filterData.Select(x => x.Value).ToArray();
+    var parameters = filterData.SelectMany(x => x.Parameters).ToArray();
 
     var orderSql = sort
       .Bind(s => propertyMap(s.PropertySelector).Map(col =>

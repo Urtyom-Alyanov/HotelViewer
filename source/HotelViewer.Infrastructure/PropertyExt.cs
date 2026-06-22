@@ -41,7 +41,7 @@ public static class PropertyExt {
   /// <typeparam name="TValue">Значение</typeparam>
   /// <returns>Инвертированный HashMap</returns>
   public static HashMap<TValue, TKey> Invert<TKey, TValue>(this HashMap<TKey, TValue> hashMap)
-    where TKey : notnull => hashMap
+    where TValue : notnull => hashMap
       .ToDictionary(pair => pair.Value, pair => pair.Key)
       .ToHashMap();
 }
