@@ -1,6 +1,8 @@
+using System.Linq.Expressions;
+
 namespace HotelViewer.Domain.Helper;
 
 /// <summary>
 /// Критерий сортировки
 /// </summary>
-public record Sort<TField>(TField Field, bool Ascending = true) where TField : Enum;
+public record Sort<TEntity>(Expression<Func<TEntity, object>> PropertySelector, bool Ascending = true);

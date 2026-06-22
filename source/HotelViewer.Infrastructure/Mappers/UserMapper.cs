@@ -14,7 +14,7 @@ public class UserMapper : IEntityMapper<User> {
     (nameof(User.Role), "Роль")
   );
 
-  private static readonly HashMap<string, string> ColToProp = ColToProp.Invert();
+  private static readonly HashMap<string, string> ColToProp = PropToCol.Invert();
 
   public static User MapFromDb(DataRow dataRow) =>
     new(

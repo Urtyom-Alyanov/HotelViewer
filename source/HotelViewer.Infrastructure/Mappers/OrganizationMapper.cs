@@ -12,11 +12,11 @@ public class OrganizationMapper : IEntityMapper<Organization> {
     (nameof(Organization.Name), "Название")
   );
 
-  private static readonly HashMap<string, string> ColToProp = ColToProp.Invert();
+  private static readonly HashMap<string, string> ColToProp = PropToCol.Invert();
 
   public static Organization MapFromDb(DataRow dataRow) =>
-    new (
-      new (dataRow.Int<Organization>(ColToProp, e => e.Id)),
+    new(
+      new(dataRow.Int<Organization>(ColToProp, e => e.Id)),
       dataRow.Str<Organization>(ColToProp, e => e.Name)
     );
 

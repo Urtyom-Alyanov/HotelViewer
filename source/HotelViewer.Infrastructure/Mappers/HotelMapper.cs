@@ -15,15 +15,15 @@ public class HotelMapper : IEntityMapper<Hotel> {
     (nameof(Hotel.OrganizationId), "ИдентификаторОрганизации")
   );
 
-  private static readonly HashMap<string, string> ColToProp = ColToProp.Invert();
+  private static readonly HashMap<string, string> ColToProp = PropToCol.Invert();
 
   public static Hotel MapFromDb(DataRow dataRow) =>
-    new (
-      new (dataRow.Int<Hotel>(ColToProp, e => e.Id)),
+    new(
+      new(dataRow.Int<Hotel>(ColToProp, e => e.Id)),
       dataRow.Str<Hotel>(ColToProp, e => e.Name),
       new(dataRow.Str<Hotel>(ColToProp, e => e.Number)),
       new(dataRow.Str<Hotel>(ColToProp, e => e.Address)),
-      new (dataRow.Int<Hotel>(ColToProp, e => e.OrganizationId))
+      new(dataRow.Int<Hotel>(ColToProp, e => e.OrganizationId))
     );
 
   public static DataTable MapIntoDb(Hotel entity, DataTable table) =>

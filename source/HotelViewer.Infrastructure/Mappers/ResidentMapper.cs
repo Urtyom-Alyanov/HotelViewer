@@ -16,7 +16,7 @@ public class ResidentMapper : IEntityMapper<Resident> {
     (nameof(Resident.PhoneNumber), "НомерТелефона")
   );
 
-  private static readonly HashMap<string, string> ColToProp = ColToProp.Invert();
+  private static readonly HashMap<string, string> ColToProp = PropToCol.Invert();
 
   public static Resident MapFromDb(DataRow dataRow) =>
     new(

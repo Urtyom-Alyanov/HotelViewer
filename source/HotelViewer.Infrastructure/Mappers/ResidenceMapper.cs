@@ -17,14 +17,14 @@ public class ResidenceMapper : IEntityMapper<Residence> {
     (nameof(Residence.ResidenceAt), "ДатаПрибытия")
   );
 
-  private static readonly HashMap<string, string> ColToProp = ColToProp.Invert();
+  private static readonly HashMap<string, string> ColToProp = PropToCol.Invert();
 
   public static Residence MapFromDb(DataRow dataRow) =>
     new(
-      new (dataRow.Int<Residence>(ColToProp, u => u.ResidenceId)),
+      new(dataRow.Int<Residence>(ColToProp, u => u.ResidenceId)),
       RoomNumber.FromDbValue(dataRow.Int<Residence>(ColToProp, u => u.Number)),
-      new (dataRow.Int<Residence>(ColToProp, u => u.HotelId)),
-      new (dataRow.Int<Residence>(ColToProp, u => u.ResidentId)),
+      new(dataRow.Int<Residence>(ColToProp, u => u.HotelId)),
+      new(dataRow.Int<Residence>(ColToProp, u => u.ResidentId)),
       dataRow.UInt<Residence>(ColToProp, u => u.DaysPerNight),
       dataRow.DateTime<Residence>(ColToProp, u => u.ResidenceAt)
     );

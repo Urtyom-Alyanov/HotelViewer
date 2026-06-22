@@ -14,7 +14,7 @@ public class RoomMapper : IEntityMapper<Room> {
     (nameof(Room.Type), "ТипНомера")
   );
 
-  private static readonly HashMap<string, string> ColToProp = ColToProp.Invert();
+  private static readonly HashMap<string, string> ColToProp = PropToCol.Invert();
 
   public static Room MapFromDb(DataRow dataRow) {
     var id = new RoomId(
