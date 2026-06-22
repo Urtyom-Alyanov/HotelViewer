@@ -30,8 +30,8 @@ public class QueryBuilder<TEntity>(
     var filterData = filter
       .Map(f => f.Criteria
         .Select(c => (from col in propertyMap(c.PropertySelector)
-          from opStr in FilterOperationMapper.Map(c.Op)
-          select (col, opStr, c.Op, c.Value)))
+                      from opStr in FilterOperationMapper.Map(c.Op)
+                      select (col, opStr, c.Op, c.Value)))
         .Somes()
         .Select(tuple => {
           var val = FilterOperationMapper.MapValue(tuple.Op, tuple.Value);

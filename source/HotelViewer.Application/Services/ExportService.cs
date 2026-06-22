@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Text;
 using HotelViewer.Application.Errors;
 using HotelViewer.Domain.Repository;
@@ -7,7 +7,7 @@ using static LanguageExt.Prelude;
 
 namespace HotelViewer.Application.Services;
 
-public class ExportService<TEntity, TEntityId> (IRepository<TEntity, TEntityId> repository) {
+public class ExportService<TEntity, TEntityId>(IRepository<TEntity, TEntityId> repository) {
   /// <summary>
   /// Экспортировать отчёт в CSV файл
   /// </summary>

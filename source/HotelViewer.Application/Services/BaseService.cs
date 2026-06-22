@@ -1,4 +1,4 @@
-﻿using HotelViewer.Application.Errors;
+using HotelViewer.Application.Errors;
 using HotelViewer.Domain.Entity;
 using LanguageExt;
 using static LanguageExt.Prelude;

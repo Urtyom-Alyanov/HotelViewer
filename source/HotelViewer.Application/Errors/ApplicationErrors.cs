@@ -1,4 +1,4 @@
-﻿using HotelViewer.Domain.Repository;
+using HotelViewer.Domain.Repository;
 
 namespace HotelViewer.Application.Errors;
 

@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using FluentAssertions;
 using HotelViewer.Domain.Entity;
 using HotelViewer.Domain.Helper;
@@ -8,11 +8,9 @@ using static LanguageExt.Prelude;
 namespace HotelViewer.Infrastructure.Helpers;
 
 public class QueryBuilder {
-  private static Option<string> MockPropertyMap(Expression<Func<User, object>> selector)
-  {
+  private static Option<string> MockPropertyMap(Expression<Func<User, object>> selector) {
     var name = PropertyExt.GetPropertyName(selector).IfNone("");
-    return name switch
-    {
+    return name switch {
       nameof(User.Username) => Some("USERNAME_COL"),
       nameof(User.Role) => Some("ROLE_COL"),
       _ => None
@@ -22,8 +20,7 @@ public class QueryBuilder {
   private readonly QueryBuilder<User> _builder = new("SELECT * FROM Tests", MockPropertyMap);
 
   [Fact]
-  public void Build_WithSimpleEquality_ReturnsCorrectSql()
-  {
+  public void Build_WithSimpleEquality_ReturnsCorrectSql() {
     // Arrange
     var filter = new Filter<User>(
       new FilterCriterion<User>(e => e.Username, "John")
@@ -38,8 +35,7 @@ public class QueryBuilder {
   }
 
   [Fact]
-  public void Build_WithInOperator_GeneratesMultiplePlaceholders()
-  {
+  public void Build_WithInOperator_GeneratesMultiplePlaceholders() {
     // Arrange
     var ids = new List<Username> { new("John"), new("Julia"), new("Doe") };
     var filter = new Filter<User>(
@@ -55,8 +51,7 @@ public class QueryBuilder {
   }
 
   [Fact]
-  public void Build_WithMultipleCriteria_OrdersParametersCorrectly()
-  {
+  public void Build_WithMultipleCriteria_OrdersParametersCorrectly() {
     // Arrange
     var filter = new Filter<User>()
       .And(e => e.Username, new Username("JULI"))
@@ -74,8 +69,7 @@ public class QueryBuilder {
   }
 
   [Fact]
-  public void Build_WithSort_AppendsOrderBy()
-  {
+  public void Build_WithSort_AppendsOrderBy() {
     // Arrange
     var sort = new Sort<User>(e => e.Username, Ascending: false);
 

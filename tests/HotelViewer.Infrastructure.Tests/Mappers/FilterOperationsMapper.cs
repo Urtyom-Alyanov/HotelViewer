@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using HotelViewer.Domain.Entity;
 using HotelViewer.Domain.Helper;
 using HotelViewer.Domain.Value;
@@ -9,8 +9,7 @@ namespace HotelViewer.Infrastructure.Mappers;
 
 public class FilterOperationsMapper {
   [Fact]
-  public void UnwrapValueObject_ShouldExtractValueProperty()
-  {
+  public void UnwrapValueObject_ShouldExtractValueProperty() {
     // Arrange
     var id = new HotelId(42);
 
@@ -23,8 +22,7 @@ public class FilterOperationsMapper {
   }
 
   [Fact]
-  public void UnwrapValueObject_ShouldExtractValuePropertyFromFunction()
-  {
+  public void UnwrapValueObject_ShouldExtractValuePropertyFromFunction() {
     // Arrange
     var id = new RoomNumber(1, 2);
 
@@ -37,8 +35,7 @@ public class FilterOperationsMapper {
   }
 
   [Fact]
-  public void MapPlaceholders_ShouldReturnMultipleQuestions_ForInOperator()
-  {
+  public void MapPlaceholders_ShouldReturnMultipleQuestions_ForInOperator() {
     // Act
     var result = FilterOperationMapper.MapPlaceholders(FilterOp.In, Some(3u));
 
@@ -47,8 +44,7 @@ public class FilterOperationsMapper {
   }
 
   [Fact]
-  public void MapValue_ShouldReturnListOfUnwrappedObjects_ForInOperator()
-  {
+  public void MapValue_ShouldReturnListOfUnwrappedObjects_ForInOperator() {
     // Arrange
     var ids = new List<HotelId> { new(1), new(2) };
 
@@ -62,8 +58,7 @@ public class FilterOperationsMapper {
   }
 
   [Fact]
-  public void MapValue_ShouldAddPercents_ForLikeOperator()
-  {
+  public void MapValue_ShouldAddPercents_ForLikeOperator() {
     // Act
     var result = FilterOperationMapper.MapValue(FilterOp.Like, "admin");
 
