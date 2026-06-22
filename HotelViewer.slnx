@@ -4,5 +4,7 @@
         <Project Path="source/HotelViewer.Domain/HotelViewer.Domain.csproj" />
         <Project Path="source/HotelViewer.Infrastructure/HotelViewer.Infrastructure.csproj" />
     </Folder>
-    <Folder Name="/tests/" />
+    <Folder Name="/tests/">
+        <Project Path="tests/HotelViewer.Infrastructure.Tests/HotelViewer.Infrastructure.Tests.csproj" />
+    </Folder>
 </Solution>
