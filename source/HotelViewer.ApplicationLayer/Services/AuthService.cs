@@ -1,9 +1,9 @@
-using HotelViewer.Application.Errors;
+using HotelViewer.ApplicationLayer.Errors;
 using HotelViewer.Domain.Entity;
 using HotelViewer.Domain.Repository;
 using LanguageExt;
 
-namespace HotelViewer.Application.Services;
+namespace HotelViewer.ApplicationLayer.Services;
 
 public class AuthService(IUserRepository userRepository, SessionContext sessionContext) {
   public Either<ApplicationError, User> Login(string login, string password) {

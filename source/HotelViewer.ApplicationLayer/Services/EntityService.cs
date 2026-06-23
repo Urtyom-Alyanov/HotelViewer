@@ -1,10 +1,10 @@
-using HotelViewer.Application.Errors;
+using HotelViewer.ApplicationLayer.Errors;
 using HotelViewer.Domain.Entity;
 using HotelViewer.Domain.Helper;
 using HotelViewer.Domain.Repository;
 using LanguageExt;
 
-namespace HotelViewer.Application.Services;
+namespace HotelViewer.ApplicationLayer.Services;
 
 /// <summary>
 /// Общий сервис для сущностей

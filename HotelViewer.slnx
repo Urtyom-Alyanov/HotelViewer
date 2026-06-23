@@ -1,6 +1,6 @@
 ﻿<Solution>
     <Folder Name="/source/">
-        <Project Path="source/HotelViewer.Application/HotelViewer.Application.csproj" />
+        <Project Path="source/HotelViewer.ApplicationLayer/HotelViewer.ApplicationLayer.csproj" />
         <Project Path="source/HotelViewer.Domain/HotelViewer.Domain.csproj" />
         <Project Path="source/HotelViewer.Infrastructure/HotelViewer.Infrastructure.csproj" />
         <Project Path="source/HotelViewer.Presentation/HotelViewer.Presentation.csproj" />

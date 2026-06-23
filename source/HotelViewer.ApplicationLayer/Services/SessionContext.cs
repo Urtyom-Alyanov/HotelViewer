@@ -2,7 +2,7 @@ using HotelViewer.Domain.Entity;
 using LanguageExt;
 using static LanguageExt.Prelude;
 
-namespace HotelViewer.Application.Services;
+namespace HotelViewer.ApplicationLayer.Services;
 
 public class SessionContext {
   public Option<User> CurrentUser { get; private set; } = None;

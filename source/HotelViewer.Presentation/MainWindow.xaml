@@ -4,9 +4,34 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HotelViewer.Presentation"
+        xmlns:converters="clr-namespace:HotelViewer.Presentation.Converters"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Управление гостиницами" Height="450" Width="800">
+  <Window.Resources>
+    <converters:RoleToVisibilityConverter x:Key="RoleToVis"/>
+  </Window.Resources>
 
-    </Grid>
+  <Grid>
+    <TabControl>
+      <TabItem Header="Гостиницы">
+        <StackPanel>
+          <DataGrid ItemsSource="{Binding Hotels.Items}" SelectedItem="{Binding Hotels.SelectedItem}" AutoGenerateColumns="True"/>
+
+          <StackPanel Orientation="Horizontal">
+            <Button Content="Обновить" Command="{Binding Hotels.LoadCommand}"/>
+            <Button Content="Добавить"
+                    Visibility="{Binding Session.CurrentUser.Value.Role,
+                                            Converter={StaticResource RoleToVis},
+                                            ConverterParameter=Redactor}"/>
+            <Button Content="Удалить"
+                    Command="{Binding Hotels.DeleteCommand}"
+                    CommandParameter="{Binding Hotels.SelectedItem.Id}"
+                    Visibility="{Binding Session.CurrentUser.Value.Role,
+                                            Converter={StaticResource RoleToVis},
+                                            ConverterParameter=Redactor}"/>
+          </StackPanel>
+        </StackPanel>
+      </TabItem>
+    </TabControl>
+  </Grid>
 </Window>

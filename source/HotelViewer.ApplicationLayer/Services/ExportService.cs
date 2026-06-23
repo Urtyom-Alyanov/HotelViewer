@@ -1,11 +1,11 @@
 using System.Reflection;
 using System.Text;
-using HotelViewer.Application.Errors;
+using HotelViewer.ApplicationLayer.Errors;
 using HotelViewer.Domain.Repository;
 using LanguageExt;
 using static LanguageExt.Prelude;
 
-namespace HotelViewer.Application.Services;
+namespace HotelViewer.ApplicationLayer.Services;
 
 public class ExportService<TEntity, TEntityId>(IRepository<TEntity, TEntityId> repository) {
   /// <summary>
