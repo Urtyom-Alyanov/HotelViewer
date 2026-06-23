@@ -1,5 +1,6 @@
-﻿using System.Windows;
+using System.Windows;
 using HotelViewer.ApplicationLayer.Services;
+using HotelViewer.Domain.Entity;
 using HotelViewer.Domain.Repository;
 using HotelViewer.Infrastructure;
 using HotelViewer.Infrastructure.Repository;
@@ -37,8 +38,16 @@ public partial class App : Application {
   }
 
   private void ConfigureServices(IServiceCollection services, string dbPath) {
-    services.AddSingleton(_ => DataAccess.CreateConnection(dbPath)
-      .IfLeft(err => throw new Exception(err.Message)));
+    services.AddSingleton(
+      _ =>
+        DataAccess.CreateConnection(dbPath)
+        .IfLeft(err => {
+          MessageBox.Show(err.Message, "Подключение к базе данных");
+          throw new Exception(err.Message);
+        })
+      );
+
+    services.AddSingleton<DbSeeder>();
 
     // Инициализация репозиториев
     services.AddSingleton<IResidenceRepository, ResidenceRepository>();
@@ -47,6 +56,13 @@ public partial class App : Application {
     services.AddSingleton<IHotelRepository, HotelRepository>();
     services.AddSingleton<IOrganizationRepository, OrganizationRepository>();
     services.AddSingleton<IUserRepository, UserRepository>();
+
+    services.AddSingleton<IRepository<Hotel, HotelId>>(s => s.GetRequiredService<IHotelRepository>());
+    services.AddSingleton<IRepository<Resident, ResidentId>>(s => s.GetRequiredService<IResidentRepository>());
+    services.AddSingleton<IRepository<Residence, ResidenceId>>(s => s.GetRequiredService<IResidenceRepository>());
+    services.AddSingleton<IRepository<Organization, OrganizationId>>(s => s.GetRequiredService<IOrganizationRepository>());
+    services.AddSingleton<IRepository<Room, RoomId>>(s => s.GetRequiredService<IRoomRepository>());
+    services.AddSingleton<IRepository<User, Username>>(s => s.GetRequiredService<IUserRepository>());
 
     // Аутентификация
     services.AddSingleton<SessionContext>();

@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Windows;
 using HotelViewer.ApplicationLayer.Services;
 using HotelViewer.Domain.Entity;
@@ -10,9 +10,9 @@ namespace HotelViewer.Presentation.ViewModels;
 public class EntityListViewModel<TEntity, TEntityId>(
   EntityService<TEntity, TEntityId> service,
   SessionContext sessionContext,
+  User currentUser,
   Func<TEntity, TEntityId> idSelector,
-  Func<IEntityEditor<TEntity>> editorFactory) : ViewModelBase
-{
+  Func<IEntityEditor<TEntity>> editorFactory) : ViewModelBase {
   public SessionContext Session => sessionContext;
   public ObservableCollection<TEntity> Items { get; } = new();
 
@@ -21,6 +21,8 @@ public class EntityListViewModel<TEntity, TEntityId>(
     get => _selectedItem;
     set { _selectedItem = value; OnPropertyChanged(); }
   }
+
+  public User? CurrentUser => currentUser;
 
   public RelayCommand DeleteSelectedCommand => new(_ => {
     if (SelectedItem != null) {
@@ -51,6 +53,19 @@ public class EntityListViewModel<TEntity, TEntityId>(
       }
     );
   });
+
+  public RelayCommand EditCommand => new(_ => {
+    if (SelectedItem == null) return;
+    var editor = editorFactory();
+    editor.SetEntity(SelectedItem);
+
+    if (editor.ShowDialog() == true && editor.Entity != null) {
+      service.Save(editor.Entity).Match(
+        err => MessageBox.Show(err.Message),
+        _ => LoadCommand.Execute(null)
+      );
+    }
+  }, _ => SelectedItem != null && sessionContext.IsInRole(UserRole.Redactor));
 
   public RelayCommand DeleteCommand => new(id => {
     if (id is TEntityId entityId) {

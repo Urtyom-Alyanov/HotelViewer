@@ -19,11 +19,11 @@ public class HotelMapper : IEntityMapper<Hotel> {
 
   public static Hotel MapFromDb(DataRow dataRow) =>
     new(
-      new(dataRow.Int<Hotel>(ColToProp, e => e.Id)),
-      dataRow.Str<Hotel>(ColToProp, e => e.Name),
-      new(dataRow.Str<Hotel>(ColToProp, e => e.Number)),
-      new(dataRow.Str<Hotel>(ColToProp, e => e.Address)),
-      new(dataRow.Int<Hotel>(ColToProp, e => e.OrganizationId))
+      new(dataRow.Int<Hotel>(PropToCol, e => e.Id)),
+      dataRow.Str<Hotel>(PropToCol, e => e.Name),
+      new(dataRow.Str<Hotel>(PropToCol, e => e.Number)),
+      new(dataRow.Str<Hotel>(PropToCol, e => e.Address)),
+      new(dataRow.Int<Hotel>(PropToCol, e => e.OrganizationId))
     );
 
   public static DataTable MapIntoDb(Hotel entity, DataTable table) =>

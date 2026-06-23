@@ -20,11 +20,11 @@ public class ResidentMapper : IEntityMapper<Resident> {
 
   public static Resident MapFromDb(DataRow dataRow) =>
     new(
-      new ResidentId(dataRow.Int<Resident>(ColToProp, u => u.Id)),
-      FullName.FromDbValue(dataRow.Str<Resident>(ColToProp, u => u.Name)),
-      new Address(dataRow.Str<Resident>(ColToProp, u => u.Address)),
-      (Sex)dataRow.Int<Resident>(ColToProp, u => u.Sex),
-      new PhoneNumber(dataRow.Str<Resident>(ColToProp, u => u.PhoneNumber))
+      new ResidentId(dataRow.Int<Resident>(PropToCol, u => u.Id)),
+      FullName.FromDbValue(dataRow.Str<Resident>(PropToCol, u => u.Name)),
+      new Address(dataRow.Str<Resident>(PropToCol, u => u.Address)),
+      (Sex)dataRow.Int<Resident>(PropToCol, u => u.Sex),
+      new PhoneNumber(dataRow.Str<Resident>(PropToCol, u => u.PhoneNumber))
     );
 
   public static DataTable MapIntoDb(Resident entity, DataTable table) =>

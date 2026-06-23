@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using HotelViewer.Presentation.ViewModels;
 
 namespace HotelViewer.Presentation.Windows;

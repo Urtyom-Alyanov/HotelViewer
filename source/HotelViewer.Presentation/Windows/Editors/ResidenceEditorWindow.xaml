@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:HotelViewer.Presentation.Windows.Editors"
         mc:Ignorable="d"
-        Title="Изменение записи о проживании" Height="360" Width="500">
+        Title="Изменение записи о проживании" Height="400" Width="500">
   <StackPanel Margin="20">
     <TextBlock Text="ID (число):"/>
     <TextBox x:Name="TxtId" Margin="0,5"/>

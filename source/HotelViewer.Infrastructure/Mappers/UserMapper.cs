@@ -18,10 +18,10 @@ public class UserMapper : IEntityMapper<User> {
 
   public static User MapFromDb(DataRow dataRow) =>
     new(
-      new Username(dataRow.Str<User>(ColToProp, u => u.Username)),
-      dataRow.Base64<User>(ColToProp, u => u.PasswordHash),
-      dataRow.Base64<User>(ColToProp, u => u.PasswordSalt),
-      (UserRole)dataRow.Int<User>(ColToProp, u => u.Role)
+      new Username(dataRow.Str<User>(PropToCol, u => u.Username)),
+      dataRow.Base64<User>(PropToCol, u => u.PasswordHash),
+      dataRow.Base64<User>(PropToCol, u => u.PasswordSalt),
+      (UserRole)dataRow.Int<User>(PropToCol, u => u.Role)
     );
 
   public static DataTable MapIntoDb(User entity, DataTable table) =>

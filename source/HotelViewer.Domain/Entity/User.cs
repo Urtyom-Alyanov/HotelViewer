@@ -80,6 +80,12 @@ public class User {
   /// <param name="password"></param>
   /// <returns>Результат проверки. true - если хеши совпадают, false - если нет</returns>
   public bool VerifyPassword(string password) {
+    if (PasswordSalt == null || PasswordSalt.Length < 8)
+      throw new Exception($"Hash len is too small ({PasswordHash?.Length ?? 0} bytes)! Check mapping.");
+
+    if (PasswordSalt == null || PasswordSalt.Length < 8)
+      throw new Exception($"Salt len is too small ({PasswordSalt?.Length ?? 0} bytes)! Check mapping.");
+
     var argonParams = Argon2Parameters.CreateDefault() with { Salt = PasswordSalt };
     var argon2 = new Argon2(argonParams);
 

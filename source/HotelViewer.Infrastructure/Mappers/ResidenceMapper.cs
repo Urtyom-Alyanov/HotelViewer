@@ -21,12 +21,12 @@ public class ResidenceMapper : IEntityMapper<Residence> {
 
   public static Residence MapFromDb(DataRow dataRow) =>
     new(
-      new(dataRow.Int<Residence>(ColToProp, u => u.ResidenceId)),
-      RoomNumber.FromDbValue(dataRow.Int<Residence>(ColToProp, u => u.Number)),
-      new(dataRow.Int<Residence>(ColToProp, u => u.HotelId)),
-      new(dataRow.Int<Residence>(ColToProp, u => u.ResidentId)),
-      dataRow.UInt<Residence>(ColToProp, u => u.DaysPerNight),
-      dataRow.DateTime<Residence>(ColToProp, u => u.ResidenceAt)
+      new(dataRow.Int<Residence>(PropToCol, u => u.ResidenceId)),
+      RoomNumber.FromDbValue(dataRow.Int<Residence>(PropToCol, u => u.Number)),
+      new(dataRow.Int<Residence>(PropToCol, u => u.HotelId)),
+      new(dataRow.Int<Residence>(PropToCol, u => u.ResidentId)),
+      dataRow.UInt<Residence>(PropToCol, u => u.DaysPerNight),
+      dataRow.DateTime<Residence>(PropToCol, u => u.ResidenceAt)
     );
 
   public static DataTable MapIntoDb(Residence entity, DataTable table) =>

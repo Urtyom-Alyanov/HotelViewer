@@ -9,7 +9,12 @@
   &lt;Assembly Path="C:\Users\artemos\.nuget\packages\languageext.core\5.0.0-beta-77\lib\net10.0\LanguageExt.Core.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=52c365e7_002D68d9_002D4096_002D88ab_002Dc39e94122572/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="UnwrapValueObject_ShouldExtractValueProperty" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;Project Location="C:\Users\artemos\RiderProjects\HotelViewer\tests\HotelViewer.Infrastructure.Tests" Presentation="&amp;lt;tests&amp;gt;\&amp;lt;HotelViewer.Infrastructure.Tests&amp;gt;" /&gt;&#xD;
+  &lt;Or&gt;&#xD;
+    &lt;Project Location="C:\Users\artemos\RiderProjects\HotelViewer\tests\HotelViewer.Infrastructure.Tests" Presentation="&amp;lt;tests&amp;gt;\&amp;lt;HotelViewer.Infrastructure.Tests&amp;gt;" /&gt;&#xD;
+    &lt;TestAncestor&gt;&#xD;
+      &lt;TestId&gt;xUnit::6B778C9A-B9A0-CD29-BA7B-591B0A89E241::net10.0::HotelViewer.Domain.Tests.Entity.UserTest&lt;/TestId&gt;&#xD;
+    &lt;/TestAncestor&gt;&#xD;
+  &lt;/Or&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	
 	

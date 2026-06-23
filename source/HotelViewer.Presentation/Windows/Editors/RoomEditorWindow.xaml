@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:HotelViewer.Presentation.Windows.Editors"
         mc:Ignorable="d"
-        Title="RoomEditorWindow" Height="200" Width="500">
+        Title="RoomEditorWindow" Height="240" Width="500">
   <StackPanel Margin="20">
     <Grid>
       <Grid.ColumnDefinitions>

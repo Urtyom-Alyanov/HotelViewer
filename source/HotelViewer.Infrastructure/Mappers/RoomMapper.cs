@@ -18,13 +18,13 @@ public class RoomMapper : IEntityMapper<Room> {
 
   public static Room MapFromDb(DataRow dataRow) {
     var id = new RoomId(
-      RoomNumber.FromDbValue(dataRow.Int<Room>(ColToProp, e => e.RoomId.Number)),
-      new HotelId(dataRow.Int<Room>(ColToProp, e => e.RoomId.HotelId))
+      RoomNumber.FromDbValue(dataRow.Int<Room>(PropToCol, e => e.RoomId.Number)),
+      new HotelId(dataRow.Int<Room>(PropToCol, e => e.RoomId.HotelId))
     );
 
     return new Room(
       id,
-      (RoomType)dataRow.Int<Room>(ColToProp, u => u.Type)
+      (RoomType)dataRow.Int<Room>(PropToCol, u => u.Type)
     );
   }
 

@@ -33,15 +33,23 @@
       <Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
           <TextBlock Text="Вы вошли как: " FontWeight="Bold"/>
-          <TextBlock Text="{Binding Session.CurrentUser.Value.Username.Value}" Margin="5,0,20,0"/>
+          <TextBlock Text="{Binding CurrentUser.Username.Value}" Margin="5,0,20,0"/>
           <TextBlock Text="Роль: " FontWeight="Bold"/>
-          <TextBlock Text="{Binding Session.CurrentUser.Value.Role}"/>
+          <TextBlock Text="{Binding CurrentUser.Role, Converter={StaticResource EnumConv}}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
           <Button
-            Background="#D40000"
+            Command="{Binding LogoutCommand}"
+            Background="#D23333"
             Foreground="White"
-            >Выйти</Button>
+            Content="Выйти"
+            >
+            <Button.Resources>
+              <Style TargetType="Border">
+                <Setter Property="CornerRadius" Value="3"/>
+              </Style>
+            </Button.Resources>
+          </Button>
         </StackPanel>
       </Grid>
     </Border>
@@ -68,9 +76,9 @@
       </TabItem>
 
       <TabItem Header="Пользователи"
-               Visibility="{Binding Session.CurrentUser.Value.Role,
-                     Converter={StaticResource RoleToVis},
-                     ConverterParameter=Admin}">
+               Visibility="{Binding CurrentUser.Role,
+                 Converter={StaticResource RoleToVis},
+                 ConverterParameter=Admin}">
         <controls:EntityTableControl DataContext="{Binding Users}"/>
       </TabItem>
     </TabControl>

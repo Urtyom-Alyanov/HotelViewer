@@ -16,8 +16,8 @@ public class OrganizationMapper : IEntityMapper<Organization> {
 
   public static Organization MapFromDb(DataRow dataRow) =>
     new(
-      new(dataRow.Int<Organization>(ColToProp, e => e.Id)),
-      dataRow.Str<Organization>(ColToProp, e => e.Name)
+      new(dataRow.Int<Organization>(PropToCol, e => e.Id)),
+      dataRow.Str<Organization>(PropToCol, e => e.Name)
     );
 
   public static DataTable MapIntoDb(Organization entity, DataTable table) =>

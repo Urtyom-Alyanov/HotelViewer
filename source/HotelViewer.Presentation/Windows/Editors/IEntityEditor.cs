@@ -1,4 +1,4 @@
-﻿namespace HotelViewer.Presentation.Windows.Editors;
+namespace HotelViewer.Presentation.Windows.Editors;
 
 public interface IEntityEditor<TEntity> {
   public TEntity? Entity { get; }
