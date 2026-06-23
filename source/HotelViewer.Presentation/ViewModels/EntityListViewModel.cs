@@ -3,12 +3,15 @@ using System.Windows;
 using HotelViewer.ApplicationLayer.Services;
 using HotelViewer.Domain.Entity;
 using HotelViewer.Presentation.Infrastructure;
+using HotelViewer.Presentation.Windows.Editors;
 
 namespace HotelViewer.Presentation.ViewModels;
 
 public class EntityListViewModel<TEntity, TEntityId>(
   EntityService<TEntity, TEntityId> service,
-  SessionContext sessionContext) : ViewModelBase
+  SessionContext sessionContext,
+  Func<TEntity, TEntityId> idSelector,
+  Func<IEntityEditor<TEntity>> editorFactory) : ViewModelBase
 {
   public SessionContext Session => sessionContext;
   public ObservableCollection<TEntity> Items { get; } = new();
@@ -18,6 +21,26 @@ public class EntityListViewModel<TEntity, TEntityId>(
     get => _selectedItem;
     set { _selectedItem = value; OnPropertyChanged(); }
   }
+
+  public RelayCommand DeleteSelectedCommand => new(_ => {
+    if (SelectedItem != null) {
+      var id = idSelector(SelectedItem);
+      service.DropById(id).Match(
+        err => MessageBox.Show(err.Message),
+        _ => LoadCommand.Execute(null)
+      );
+    }
+  }, _ => SelectedItem != null && sessionContext.IsInRole(UserRole.Redactor));
+
+  public RelayCommand AddCommand => new(_ => {
+    var editor = editorFactory();
+    if (editor.ShowDialog() == true && editor.Entity != null) {
+      service.Save(editor.Entity).Match(
+        err => MessageBox.Show(err.Message),
+        _ => LoadCommand.Execute(null)
+      );
+    }
+  }, _ => sessionContext.IsInRole(UserRole.Redactor));
 
   public RelayCommand LoadCommand => new(_ => {
     service.FindMany().Match(
@@ -36,5 +59,5 @@ public class EntityListViewModel<TEntity, TEntityId>(
         _ => LoadCommand.Execute(null)
       );
     }
-  }, _ => sessionContext.IsInRole(UserRole.Admin)); // Кнопка активна только для Админа
+  }, _ => sessionContext.IsInRole(UserRole.Redactor));
 }

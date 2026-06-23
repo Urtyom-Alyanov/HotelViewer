@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using HotelViewer.ApplicationLayer.Services;
 using HotelViewer.Presentation.Infrastructure;
+using HotelViewer.Presentation.Windows;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HotelViewer.Presentation.ViewModels;

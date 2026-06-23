@@ -1,0 +1,31 @@
+﻿<Window x:Class="HotelViewer.Presentation.Windows.Editors.ResidenceEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:HotelViewer.Presentation.Windows.Editors"
+        mc:Ignorable="d"
+        Title="Изменение записи о проживании" Height="360" Width="500">
+  <StackPanel Margin="20">
+    <TextBlock Text="ID (число):"/>
+    <TextBox x:Name="TxtId" Margin="0,5"/>
+
+    <TextBlock Text="Номер:"/>
+    <TextBox x:Name="TxtRoomNumber" Margin="0,5"/>
+
+    <TextBlock Text="Идентификатор отеля:"/>
+    <TextBox x:Name="TxtHotelId" Margin="0,5"/>
+
+    <TextBlock Text="Идентификатор проживающего:"/>
+    <TextBox x:Name="TxtResidentId" Margin="0,5"/>
+
+    <TextBlock Text="На сколько:"/>
+    <TextBox x:Name="TxtDaysPerNight" Margin="0,5"/>
+
+    <TextBlock Text="Дата и время прибытия:"/>
+    <TextBox x:Name="TxtDateTime" Margin="0,5"/>
+
+    <Button Content="Сохранить" Click="BtnSave_Click" Margin="0,20" Height="30"/>
+  </StackPanel>
+</Window>
+

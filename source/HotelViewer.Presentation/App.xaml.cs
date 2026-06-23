@@ -1,14 +1,11 @@
-﻿using System.Configuration;
-using System.Data;
-using System.IO;
-using System.Windows;
+﻿using System.Windows;
 using HotelViewer.ApplicationLayer.Services;
-using HotelViewer.Domain.Entity;
 using HotelViewer.Domain.Repository;
 using HotelViewer.Infrastructure;
 using HotelViewer.Infrastructure.Repository;
 using HotelViewer.Presentation.Infrastructure;
 using HotelViewer.Presentation.ViewModels;
+using HotelViewer.Presentation.Windows;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HotelViewer.Presentation;
@@ -40,7 +37,7 @@ public partial class App : Application {
   }
 
   private void ConfigureServices(IServiceCollection services, string dbPath) {
-    services.AddSingleton(s => DataAccess.CreateConnection(dbPath)
+    services.AddSingleton(_ => DataAccess.CreateConnection(dbPath)
       .IfLeft(err => throw new Exception(err.Message)));
 
     // Инициализация репозиториев
