@@ -29,6 +29,131 @@
 - `HotelViewer.Application` - прикладной уровень, отвечает за оркестрацию всем этим безумием.
 - `HotelViewer.Presentation` - уровень презентации, отвечает за I/O с пользовательской стороны.
 
+#### UML диаграммы
+##### Архитектура
+```plantuml
+@startuml
+package "Presentation Layer (WPF)" {
+    [Views (Windows/Controls)] --> [ViewModels]
+    [ViewModels] --> [Converters/Infrastructure]
+}
+
+package "Application Layer" {
+    [EntityService<T, ID>]
+    [AuthService]
+    [ExportService]
+    [SessionContext]
+}
+
+package "Domain Layer" {
+    [Entities]
+    [Value Objects]
+    [Repository Interfaces]
+}
+
+package "Infrastructure Layer" {
+    [Repositories (OleDb)]
+    [Mappers]
+    [QueryBuilder]
+    [DataAccess (MS Access)]
+}
+
+[ViewModels] ..> [Application Layer] : Orchestration
+[Application Layer] ..> [Repository Interfaces] : Use
+[Repositories (OleDb)] --|> [Repository Interfaces] : Implements
+[Repositories (OleDb)] --> [DataAccess (MS Access)] : Low-level I/O
+@enduml
+```
+##### Use-case
+```plantuml
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Наблюдатель" as Reader
+actor "Редактор" as Redactor
+actor "Администратор" as Admin
+
+Redactor --|> Reader
+Admin --|> Redactor
+
+rectangle "Система HotelViewer" {
+
+  (Авторизация) as (Login)
+  (Просмотр данных) as (View)
+  (Поиск и фильтрация) as (Search)
+  (Экспорт в CSV) as (Export)
+
+  (Добавление данных) as (Add)
+  (Редактирование данных) as (Edit)
+
+  (Удаление данных) as (Delete)
+  (Управление пользователями) as (Users)
+
+  Reader --> (Login)
+  Reader --> (View)
+  Reader --> (Search)
+  Reader --> (Export)
+
+  Redactor --> (Add)
+  Redactor --> (Edit)
+  Redactor --> (Delete)
+
+  Admin --> (Users)
+
+  (Search) .> (View) : <<extend>>
+  (Edit) ..> (View) : <<precede>>
+}
+@enduml
+```
+
+##### Диаграмма с потоком данных (DFD)
+```plantuml
+@startuml
+skinparam backgroundColor white
+skinparam BoxPadding 10
+left to right direction
+
+actor "Пользователь" as User
+actor "Администратор" as Admin
+
+rectangle "Система HotelViewer" {
+    process "P1: Авторизация" as P1
+    process "P2: Управление данными\n(CRUD)" as P2
+    process "P3: Поиск и фильтрация" as P3
+    process "P4: Формирование отчетов" as P4
+    process "P5: Администрирование\nпользователей" as P5
+}
+
+database "БД MS Access" as DB
+
+' Потоки данных
+User --> P1 : Логин, Пароль
+P1 --> DB : Запрос хэша
+DB --> P1 : Хэш и Соль
+P1 --> User : Статус сессии/Роль
+
+User --> P2 : Данные сущности
+P2 --> DB : SQL (Insert/Update/Delete)
+DB --> P2 : Результат операции
+
+User --> P3 : Критерии поиска
+P3 --> DB : SELECT с фильтрами
+DB --> P3 : Набор записей
+P3 --> User : Отображение в таблице
+
+User --> P4 : Запрос на экспорт
+P4 --> DB : Чтение данных
+P4 --> User : CSV файл
+
+Admin --> P5 : Данные нового пользователя
+P5 --> DB : Сохранение хэша
+DB --> P5 : Список пользователей
+P5 --> Admin : Список в UI
+
+@enduml
+```
+
 Для большей надёжности, что было указано в ТЗ, были применены некоторые паттерны функционального программирования,
 в частности - монады `Either` и `Option`, что позволяет нам избавиться от неожиданных исключений (точнее минимизировать их),
 а также избавиться от типа `null`, заменив его на `Option`. Из этой же рубрики можно сказать и про лямбда-выражения.

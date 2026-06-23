@@ -38,12 +38,19 @@ public class MainViewModel : ViewModelBase {
     EntityService<Residence, ResidenceId> residenceService,
     EntityService<Organization, OrganizationId> organizationService,
     EntityService<Room, RoomId> roomService,
-    EntityService<User, Username> userService) {
+    EntityService<User, Username> userService,
+    ExportService<Hotel, HotelId> hotelExport,
+    ExportService<Resident, ResidentId> residentExport,
+    ExportService<Residence, ResidenceId> residenceExport,
+    ExportService<Organization, OrganizationId> organizationExport,
+    ExportService<Room, RoomId> roomExport,
+    ExportService<User, Username> userExport) {
     Session = session;
     _serviceProvider = serviceProvider;
 
     Hotels = new EntityListViewModel<Hotel, HotelId>(
       hotelService,
+      hotelExport,
       session,
       CurrentUser,
       e => e.Id,
@@ -51,6 +58,7 @@ public class MainViewModel : ViewModelBase {
       );
     Residents = new EntityListViewModel<Resident, ResidentId>(
       residentService,
+      residentExport,
       session,
       CurrentUser,
       e => e.Id,
@@ -58,6 +66,7 @@ public class MainViewModel : ViewModelBase {
       );
     Residencies = new EntityListViewModel<Residence, ResidenceId>(
       residenceService,
+      residenceExport,
       session,
       CurrentUser,
       e => e.ResidenceId,
@@ -65,6 +74,7 @@ public class MainViewModel : ViewModelBase {
       );
     Organizations = new EntityListViewModel<Organization, OrganizationId>(
       organizationService,
+      organizationExport,
       session,
       CurrentUser,
       e => e.Id,
@@ -72,6 +82,7 @@ public class MainViewModel : ViewModelBase {
       );
     Rooms = new EntityListViewModel<Room, RoomId>(
       roomService,
+      roomExport,
       session,
       CurrentUser,
       e => e.RoomId,
@@ -88,6 +99,7 @@ public class MainViewModel : ViewModelBase {
 
     Users = new EntityListViewModel<User, Username>(
       userService,
+      userExport,
       session,
       CurrentUser,
       e => e.Username,

@@ -13,7 +13,7 @@ public class ExportService<TEntity, TEntityId>(IRepository<TEntity, TEntityId> r
   /// </summary>
   /// <param name="filePath">Путь к CSV файлу</param>
   /// <returns>Путь к CSV файлу</returns>
-  public Either<ApplicationError, string> ExportHotelsToCsv(string filePath) {
+  public Either<ApplicationError, string> ExportToCsv(string filePath) {
     return repository.FindMany(None, None, None, None)
       .MapLeft(err => (ApplicationError)new RepositoryFailure(err))
       .Bind(entities => {

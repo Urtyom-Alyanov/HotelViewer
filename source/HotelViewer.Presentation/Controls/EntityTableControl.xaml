@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:HotelViewer.Presentation.Controls"
              xmlns:converters="clr-namespace:HotelViewer.Presentation.Converters"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="500">
+             d:DesignHeight="300" d:DesignWidth="1300">
 
   <UserControl.Resources>
     <converters:RoleToVisibilityConverter x:Key="RoleToVis"/>
@@ -19,36 +19,70 @@
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
-    <StackPanel Grid.Row="0"
+    <Border Grid.Row="0"  Background="#F9F9F9" BorderBrush="#DDD" BorderThickness="0,0,0,1" Padding="10">
+      <StackPanel Orientation="Horizontal"
+                  HorizontalAlignment="Right">
+        <TextBlock Text="Поиск по:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+        <ComboBox ItemsSource="{Binding AvailableProperties}"
+                  SelectedItem="{Binding SelectedProperty}"
+                  Width="120" Margin="0,0,10,0"/>
+
+        <ComboBox ItemsSource="{Binding AvailableOps}"
+                  SelectedItem="{Binding SelectedOp}"
+                  Width="80" Margin="0,0,10,0">
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding}"/>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                 Width="200" VerticalContentAlignment="Center" Margin="0,0,10,0"/>
+
+        <Button Content="Найти" Command="{Binding LoadCommand}" Padding="15,0" Background="#0078D4" Foreground="White"/>
+        <Button Content="Сбросить" Click="ResetSearch_Click" Margin="5,0" Background="Transparent" BorderThickness="0"/>
+      </StackPanel>
+    </Border>
+    <StackPanel Grid.Row="1"
                 Orientation="Horizontal"
                 HorizontalAlignment="Right"
                 Style="{StaticResource TableToolbox}">
+
       <Button Content="Добавить"
               Command="{Binding AddCommand}"
-              Visibility="{Binding Session.CurrentUser.Value.Role,
+              Visibility="{Binding CurrentUser.Role,
                           Converter={StaticResource RoleToVis},
                           ConverterParameter=Redactor}" />
       <Button Content="Обновить список"
               Command="{Binding LoadCommand}" />
       <Button Content="Изменить"
               Command="{Binding EditCommand}"
-              Visibility="{Binding Session.CurrentUser.Value.Role,
+              Visibility="{Binding CurrentUser.Role,
                           Converter={StaticResource RoleToVis},
                           ConverterParameter=Redactor}"/>
       <Button Content="Удалить"
               Command="{Binding DeleteSelectedCommand}"
-              Visibility="{Binding Session.CurrentUser.Value.Role,
+              Visibility="{Binding CurrentUser.Role,
                           Converter={StaticResource RoleToVis},
                           ConverterParameter=Redactor}" />
+      <Button Content="Экспорт в CSV"
+              Command="{Binding CSVExport}"
+              Visibility="{Binding CurrentUser.Role,
+                          Converter={StaticResource RoleToVis},
+                          ConverterParameter=Reader}" />
     </StackPanel>
-    <DataGrid Grid.Row="1"
+    <DataGrid Grid.Row="2"
               ItemsSource="{Binding Items}"
               SelectedItem="{Binding SelectedItem}"
               AutoGenerateColumns="True"
               IsReadOnly="True"
               Margin="5"
+              Sorting="DataGrid_OnSorting"
+              CanUserSortColumns="True"
               AutoGeneratingColumn="DataGrid_OnAutoGeneratingColumn"
               />
   </Grid>

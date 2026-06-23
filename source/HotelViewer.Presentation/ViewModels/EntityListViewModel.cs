@@ -2,17 +2,23 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using HotelViewer.ApplicationLayer.Services;
 using HotelViewer.Domain.Entity;
+using HotelViewer.Domain.Helper;
 using HotelViewer.Presentation.Infrastructure;
 using HotelViewer.Presentation.Windows.Editors;
+using LanguageExt;
+using Microsoft.Win32;
+using static LanguageExt.Prelude;
 
 namespace HotelViewer.Presentation.ViewModels;
 
 public class EntityListViewModel<TEntity, TEntityId>(
   EntityService<TEntity, TEntityId> service,
+  ExportService<TEntity, TEntityId> exportService,
   SessionContext sessionContext,
   User currentUser,
   Func<TEntity, TEntityId> idSelector,
   Func<IEntityEditor<TEntity>> editorFactory) : ViewModelBase {
+
   public SessionContext Session => sessionContext;
   public ObservableCollection<TEntity> Items { get; } = new();
 
@@ -21,6 +27,55 @@ public class EntityListViewModel<TEntity, TEntityId>(
     get => _selectedItem;
     set { _selectedItem = value; OnPropertyChanged(); }
   }
+
+  private Option<Sort<TEntity>> _currentSort = None;
+
+  private string _searchText = "";
+  public string SearchText { get => _searchText; set { _searchText = value; OnPropertyChanged(); } }
+
+  private string? _selectedProperty;
+  public string? SelectedProperty { get => _selectedProperty; set { _selectedProperty = value; OnPropertyChanged(); } }
+
+  private FilterOp _selectedOp = FilterOp.Like;
+  public FilterOp SelectedOp { get => _selectedOp; set { _selectedOp = value; OnPropertyChanged(); } }
+
+  public List<string> AvailableProperties => typeof(TEntity)
+    .GetProperties()
+    .Select(p => p.Name)
+    .ToList();
+
+  public void ApplySort(string propertyName, bool ascending)
+  {
+    if (string.IsNullOrEmpty(propertyName)) return;
+
+    var param = System.Linq.Expressions.Expression.Parameter(typeof(TEntity), "e");
+    System.Linq.Expressions.Expression body = param;
+
+    foreach (var member in propertyName.Split('.'))
+    {
+      body = System.Linq.Expressions.Expression.PropertyOrField(body, member);
+    }
+
+    var conversion = System.Linq.Expressions.Expression.Convert(body, typeof(object));
+    var selector = System.Linq.Expressions.Expression.Lambda<Func<TEntity, object>>(conversion, param);
+
+    _currentSort = Some(new Sort<TEntity>(selector, ascending));
+
+    LoadData();
+  }
+
+  private void LoadData()
+  {
+    service.FindMany(filter: BuildFilter(), sort: _currentSort).Match(
+      err => MessageBox.Show(err.Message),
+      list => {
+        Items.Clear();
+        foreach (var item in list) Items.Add(item);
+      }
+    );
+  }
+
+  public List<FilterOp> AvailableOps => Enum.GetValues(typeof(FilterOp)).Cast<FilterOp>().ToList();
 
   public User? CurrentUser => currentUser;
 
@@ -44,15 +99,19 @@ public class EntityListViewModel<TEntity, TEntityId>(
     }
   }, _ => sessionContext.IsInRole(UserRole.Redactor));
 
-  public RelayCommand LoadCommand => new(_ => {
-    service.FindMany().Match(
-      err => MessageBox.Show(err.Message),
-      list => {
-        Items.Clear();
-        foreach (var item in list) Items.Add(item);
-      }
-    );
-  });
+  public RelayCommand LoadCommand => new(_ => LoadData());
+
+  private Option<Filter<TEntity>> BuildFilter() {
+    if (string.IsNullOrWhiteSpace(SearchText) || string.IsNullOrEmpty(SelectedProperty))
+      return None;
+
+    var param = System.Linq.Expressions.Expression.Parameter(typeof(TEntity), "e");
+    var prop = System.Linq.Expressions.Expression.Property(param, SelectedProperty);
+    var conversion = System.Linq.Expressions.Expression.Convert(prop, typeof(object));
+    var selector = System.Linq.Expressions.Expression.Lambda<Func<TEntity, object>>(conversion, param);
+
+    return Some(new Filter<TEntity>(new FilterCriterion<TEntity>(selector, SearchText, SelectedOp)));
+  }
 
   public RelayCommand EditCommand => new(_ => {
     if (SelectedItem == null) return;
@@ -66,6 +125,18 @@ public class EntityListViewModel<TEntity, TEntityId>(
       );
     }
   }, _ => SelectedItem != null && sessionContext.IsInRole(UserRole.Redactor));
+
+  public RelayCommand CSVExport => new(_ => {
+    var dialog = new SaveFileDialog {
+      Filter = "CSV файл (*.csv)|*.csv",
+      FileName = $"{typeof(TEntity).Name}_Export_{DateTime.Now:yyyyMMdd}"
+    };
+    if (dialog.ShowDialog() == true)
+      exportService.ExportToCsv(dialog.FileName).Match(
+        err => MessageBox.Show(err.Message, "Ошибка экспорта"),
+        path => MessageBox.Show($"Данные успешно экспортированы: {path}", "Экспорт")
+      );
+  }, _ => sessionContext.IsInRole(UserRole.Reader));
 
   public RelayCommand DeleteCommand => new(id => {
     if (id is TEntityId entityId) {
