@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Windows.Data;
 using HotelViewer.Domain.Entity;
+using HotelViewer.Domain.Helper;
 using HotelViewer.Domain.Value;
 
 namespace HotelViewer.Presentation.Converters;
@@ -15,6 +16,14 @@ public class EnumDescriptionConverter : IValueConverter {
     RoomType.Suite => "Люкс",
     RoomType.JuniorSuite => "Полу-люкс",
     RoomType.Presidential => "Президентский",
+
+    FilterOp.Eq => "=",
+    FilterOp.Like => "Содержит",
+    FilterOp.Gt => ">",
+    FilterOp.Lt => "<",
+    FilterOp.GtEq => "≥",
+    FilterOp.LtEq => "≤",
+    FilterOp.In => "В списке",
 
     Sex.Male => "Мужской",
     Sex.Female => "Женский",

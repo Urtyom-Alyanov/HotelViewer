@@ -28,18 +28,21 @@
         <TextBlock Text="Фильтр по:" VerticalAlignment="Center" Margin="0,0,5,0"/>
         <ComboBox ItemsSource="{Binding AvailableProperties}"
                   SelectedItem="{Binding SelectedProperty}"
+                  DisplayMemberPath="Header"
                   Width="100" Margin="0,0,10,0"
                   Style="{StaticResource ComboBox}"
                   />
 
         <ComboBox ItemsSource="{Binding AvailableOps}"
                   SelectedItem="{Binding SelectedOp}"
-                  Width="65" Margin="0,0,10,0"
+                  Width="100" Margin="0,0,10,0"
                   Style="{StaticResource ComboBox}"
                   >
           <ComboBox.ItemTemplate>
             <DataTemplate>
-              <TextBlock Text="{Binding}"/>
+              <TextBlock Text="{Binding Converter={StaticResource EnumConv}}"
+                         FontWeight="SemiBold"
+                         HorizontalAlignment="Center"/>
             </DataTemplate>
           </ComboBox.ItemTemplate>
         </ComboBox>

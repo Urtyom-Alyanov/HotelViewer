@@ -37,19 +37,13 @@ public class EntityListViewModel<TEntity, TEntityId>(
   private string _searchText = "";
   public string SearchText { get => _searchText; set { _searchText = value; OnPropertyChanged(); } }
 
-  private string? _selectedProperty;
-  public string? SelectedProperty { get => _selectedProperty; set { _selectedProperty = value; OnPropertyChanged(); } }
+  private IColumnConfig? _selectedProperty;
+  public IColumnConfig? SelectedProperty { get => _selectedProperty; set { _selectedProperty = value; OnPropertyChanged(); } }
 
   private FilterOp _selectedOp = FilterOp.Like;
   public FilterOp SelectedOp { get => _selectedOp; set { _selectedOp = value; OnPropertyChanged(); } }
 
-  private static readonly string[] blackList = ["PasswordHash", "PasswordSalt"];
-
-  public List<string> AvailableProperties => typeof(TEntity)
-    .GetProperties()
-    .Select(p => p.Name)
-    .Where(p => !blackList.Contains(p))
-    .ToList();
+  public List<IColumnConfig> AvailableProperties => ColumnConfigs;
 
   public void ApplySort(string propertyName, bool ascending) {
     if (string.IsNullOrEmpty(propertyName)) return;
@@ -105,12 +99,17 @@ public class EntityListViewModel<TEntity, TEntityId>(
   public RelayCommand LoadCommand => new(_ => LoadData());
 
   private Option<Filter<TEntity>> BuildFilter() {
-    if (string.IsNullOrWhiteSpace(SearchText) || string.IsNullOrEmpty(SelectedProperty))
+    if (string.IsNullOrWhiteSpace(SearchText) || SelectedProperty == null)
       return None;
 
     var param = System.Linq.Expressions.Expression.Parameter(typeof(TEntity), "e");
-    var prop = System.Linq.Expressions.Expression.Property(param, SelectedProperty);
-    var conversion = System.Linq.Expressions.Expression.Convert(prop, typeof(object));
+
+    System.Linq.Expressions.Expression body = param;
+
+    foreach (var member in SelectedProperty.PropertyPath.Split('.'))
+      body = System.Linq.Expressions.Expression.PropertyOrField(body, member);
+
+    var conversion = System.Linq.Expressions.Expression.Convert(body, typeof(object));
     var selector = System.Linq.Expressions.Expression.Lambda<Func<TEntity, object>>(conversion, param);
 
     object value;
@@ -120,7 +119,7 @@ public class EntityListViewModel<TEntity, TEntityId>(
         .Select(p => p.Trim())
         .ToList();
 
-      var propType = prop.Type;
+      var propType = body.Type;
       if (propType == typeof(int))
         value = parts.Select(p => int.TryParse(p, out var i) ? i : 0).ToList();
       else value = parts;
