@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:HotelViewer.Presentation.Windows.Editors"
         xmlns:converters="clr-namespace:HotelViewer.Presentation.Converters"
         mc:Ignorable="d"
-        Title="UserEditorWindow" Height="300" Width="500">
+        Title="Изменение пользователя" Height="300" Width="500">
   <Window.Resources>
     <converters:EnumDescriptionConverter x:Key="EnumConv"/>
   </Window.Resources>

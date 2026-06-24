@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:HotelViewer.Presentation.Windows.Editors"
         xmlns:viewModels="clr-namespace:HotelViewer.Presentation.ViewModels"
         mc:Ignorable="d"
-        Title="RoomEditorWindow" Height="280" Width="500">
+        Title="Изменение комнаты" Height="280" Width="500">
   <StackPanel Margin="20">
     <Grid>
       <Grid.ColumnDefinitions>
@@ -29,11 +29,11 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" >
           <TextBlock Text="Этаж:" Margin="0 0 10 0"/>
-          <TextBox x:Name="TxtRoomStage" Style="{StaticResource TextBox}" Margin="2,5"/>
+          <TextBox x:Name="TxtRoomStage" MaxLength="1" PreviewTextInput="OnlyNumbers_PreviewTextInput" Style="{StaticResource TextBox}" Margin="2,5"/>
         </StackPanel>
         <StackPanel Grid.Column="1" >
           <TextBlock Text="Номер комнаты:"/>
-          <TextBox x:Name="TxtRoomNumber" Style="{StaticResource TextBox}" Margin="2,5"/>
+          <TextBox x:Name="TxtRoomNumber" MaxLength="2" PreviewTextInput="OnlyNumbers_PreviewTextInput" Style="{StaticResource TextBox}" Margin="2,5"/>
         </StackPanel>
       </Grid>
     </Grid>

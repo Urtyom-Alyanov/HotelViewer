@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Input;
 using HotelViewer.Domain.Entity;
 using HotelViewer.Domain.Value;
 
@@ -22,16 +23,23 @@ public partial class RoomEditorWindow : Window, IEntityEditor<Room> {
     TxtRoomStage.Text = entity.RoomId.Number.Stage.ToString();
     TxtRoomStage.IsEnabled = false;
 
-    CmbHotel.SelectedItem = entity.RoomId.HotelId;
+    CmbHotel.SelectedValue = entity.RoomId.HotelId;
     CmbHotel.IsEnabled = false;
 
     SelectedRoomType = entity.Type;
+
+    DataContext = null;
+    DataContext = this;
+  }
+
+  private void OnlyNumbers_PreviewTextInput(object sender, TextCompositionEventArgs e) {
+    e.Handled = !char.IsDigit(e.Text, 0) && !(e.Text.Length <= 1);
   }
 
   private void BtnSave_Click(object sender, RoutedEventArgs e) {
     try {
       var selectedHotelId = CmbHotel.SelectedValue as HotelId;
-      if (CmbHotel == null) throw new Exception("Выберите отель!");
+      if (selectedHotelId == null) throw new Exception("Выберите отель!");
 
       Entity = new Room(
         new RoomId(
