@@ -5,24 +5,41 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:HotelViewer.Presentation.Windows.Editors"
         mc:Ignorable="d"
-        Title="Изменение проживающего" Height="370" Width="500">
+        Title="Изменение проживающего" Height="470" Width="500">
   <StackPanel Margin="20">
     <TextBlock Text="ID (число):"/>
-    <TextBox x:Name="TxtId" Margin="0,5"/>
-
-    <TextBlock Text="ФИО:"/>
-    <TextBox x:Name="TxtName" Margin="0,5"/>
+    <TextBox x:Name="TxtId" Style="{StaticResource TextBox}" Margin="0,5"/>
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <StackPanel Grid.Column="0">
+        <TextBlock Text="Фамилия:"/>
+        <TextBox x:Name="TxtLastName" Style="{StaticResource TextBox}" Margin="2,5"/>
+      </StackPanel>
+      <StackPanel Grid.Column="1">
+        <TextBlock Text="Имя:"/>
+        <TextBox x:Name="TxtFirstName" Style="{StaticResource TextBox}" Margin="2,5"/>
+      </StackPanel>
+      <StackPanel Grid.Column="2">
+        <TextBlock Text="Отчество:"/>
+        <TextBox x:Name="TxtMiddleName" Style="{StaticResource TextBox}" Margin="2,5"/>
+      </StackPanel>
+    </Grid>
 
     <TextBlock Text="Адрес:"/>
-    <TextBox x:Name="TxtAddress" Margin="0,5"/>
+    <TextBox x:Name="TxtAddress" Style="{StaticResource TextBox}" Margin="0,5"/>
 
     <TextBlock Text="Телефон:"/>
-    <TextBox x:Name="TxtPhone" Margin="0,5"/>
+    <TextBox x:Name="TxtPhone" PreviewTextInput="TxtPhone_PreviewTextInput" MaxLength="18" Style="{StaticResource TextBox}" Margin="0,5"/>
 
     <TextBlock Text="Пол:"/>
     <ComboBox ItemsSource="{Binding AllSexes}"
+              Style="{StaticResource ComboBox}"
               SelectedItem="{Binding SelectedSex, Mode=TwoWay}"
-              Margin="0,5,0,15">
+              Margin="0,5,0,10">
       <ComboBox.ItemTemplate>
         <DataTemplate>
           <TextBlock Text="{Binding Converter={StaticResource EnumConv}}"/>
@@ -30,7 +47,7 @@
       </ComboBox.ItemTemplate>
     </ComboBox>
 
-    <Button Content="Сохранить" Click="BtnSave_Click" Margin="0,20" Height="30"/>
+    <Button Content="Сохранить" Style="{StaticResource SuccessButton}" Click="BtnSave_Click" Margin="0,10, 0, 0" />
   </StackPanel>
 </Window>
 

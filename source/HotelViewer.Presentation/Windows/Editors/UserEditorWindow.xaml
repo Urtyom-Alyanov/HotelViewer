@@ -6,17 +6,18 @@
         xmlns:local="clr-namespace:HotelViewer.Presentation.Windows.Editors"
         xmlns:converters="clr-namespace:HotelViewer.Presentation.Converters"
         mc:Ignorable="d"
-        Title="UserEditorWindow" Height="280" Width="500">
+        Title="UserEditorWindow" Height="300" Width="500">
   <Window.Resources>
     <converters:EnumDescriptionConverter x:Key="EnumConv"/>
   </Window.Resources>
 
   <StackPanel Margin="20">
     <TextBlock Text="Имя пользователя:"/>
-    <TextBox x:Name="TxtUsername" Margin="0,5"/>
+    <TextBox Style="{StaticResource TextBox}" x:Name="TxtUsername" Margin="0,5"/>
 
     <TextBlock Text="Роль пользователя:"/>
     <ComboBox ItemsSource="{Binding AllRoles}"
+              Style="{StaticResource ComboBox}"
               SelectedItem="{Binding SelectedRole, Mode=TwoWay}"
               Margin="0,5,0,10">
       <ComboBox.ItemTemplate>
@@ -27,9 +28,9 @@
     </ComboBox>
 
     <TextBlock Text="Новый пароль:"/>
-    <TextBox x:Name="TxtNewPassword" Margin="0,5"/>
+    <TextBox Style="{StaticResource TextBox}" x:Name="TxtNewPassword" Margin="0,5"/>
 
-    <Button Content="Сохранить" Click="BtnSave_Click" Margin="0,20" Height="30"/>
+    <Button Content="Сохранить" Style="{StaticResource SuccessButton}" Click="BtnSave_Click" Margin="0,10, 0, 0"/>
   </StackPanel>
 </Window>
 

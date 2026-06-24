@@ -19,9 +19,106 @@
         <Setter Property="Margin" Value="10"/>
         <Setter Property="HorizontalAlignment" Value="Right"/>
       </Style>
-      <Style TargetType="Button">
-        <Setter Property="Padding" Value="15,5"/>
-        <Setter Property="Margin" Value="5,0"/>
+
+      <Style x:Key="ComboBox" TargetType="ComboBox">
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Margin" Value="0,5,0,15"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="#CCCCCC"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Style.Resources>
+          <Style TargetType="Border">
+            <Setter Property="CornerRadius" Value="4"/>
+          </Style>
+        </Style.Resources>
+      </Style>
+
+      <Style x:Key="TextBox" TargetType="TextBox">
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Margin" Value="2,5,2,15"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="#CCCCCC"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Style.Resources>
+          <Style TargetType="Border">
+            <Setter Property="CornerRadius" Value="4"/>
+          </Style>
+        </Style.Resources>
+      </Style>
+
+      <Style x:Key="PasswordBox" TargetType="PasswordBox">
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Margin" Value="2,5,2,15"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="#CCCCCC"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Style.Resources>
+          <Style TargetType="Border">
+            <Setter Property="CornerRadius" Value="4"/>
+          </Style>
+        </Style.Resources>
+      </Style>
+
+      <Style x:Key="Button" TargetType="Button">
+        <Setter Property="Background" Value="#E1E1E1"/>
+        <Setter Property="Foreground" Value="#333333"/>
+        <Setter Property="Padding" Value="15,7"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="Button">
+              <Border x:Name="border"
+                      Background="{TemplateBinding Background}"
+                      BorderBrush="{TemplateBinding BorderBrush}"
+                      BorderThickness="{TemplateBinding BorderThickness}"
+                      Padding="{TemplateBinding Padding}"
+                      Margin="{TemplateBinding Margin}"
+                      CornerRadius="3">
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              </Border>
+              <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                  <Setter TargetName="border" Property="Opacity" Value="0.8"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                  <Setter TargetName="border" Property="Opacity" Value="0.6"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                  <Setter TargetName="border" Property="Background" Value="#F0F0F0"/>
+                  <Setter Property="Foreground" Value="#A0A0A0"/>
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+      <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource Button}">
+        <Setter Property="Background" Value="#0078D4"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+      </Style>
+      <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource Button}">
+        <Setter Property="Background" Value="#D40000"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+      </Style>
+      <Style x:Key="WarningButton" TargetType="Button" BasedOn="{StaticResource Button}">
+        <Setter Property="Background" Value="#D4D400"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+      </Style>
+      <Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource Button}">
+        <Setter Property="Background" Value="#217346"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
       </Style>
     </Application.Resources>
 </Application>

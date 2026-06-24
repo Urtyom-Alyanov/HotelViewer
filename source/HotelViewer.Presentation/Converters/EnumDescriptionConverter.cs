@@ -13,11 +13,12 @@ public class EnumDescriptionConverter : IValueConverter {
 
     RoomType.Standard => "Стандарт",
     RoomType.Suite => "Люкс",
+    RoomType.JuniorSuite => "Полу-люкс",
     RoomType.Presidential => "Президентский",
 
     Sex.Male => "Мужской",
     Sex.Female => "Женский",
-    _ => value?.ToString() ?? ""
+    _ => value
   };
 
   public object ConvertBack(object v, Type t, object p, CultureInfo c) => throw new NotImplementedException();

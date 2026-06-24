@@ -2,7 +2,10 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using HotelViewer.Domain.Entity;
+using HotelViewer.Domain.Value;
 using HotelViewer.Presentation.Converters;
+using HotelViewer.Presentation.Mappers;
 using HotelViewer.Presentation.ViewModels;
 
 namespace HotelViewer.Presentation.Controls;
@@ -12,37 +15,23 @@ public partial class EntityTableControl : UserControl {
 
   public EntityTableControl() {
     InitializeComponent();
+    this.DataContextChanged += OnDataContextChanged;
   }
 
-  private void DataGrid_OnAutoGeneratingColumn(object? sender, DataGridAutoGeneratingColumnEventArgs e) {
-    var blackList = new[] { "PasswordHash", "PasswordSalt" };
-    if (blackList.Contains(e.PropertyName)) {
-      e.Cancel = true;
-      return;
-    }
+  private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e) {
+    if (ViewModel == null) return;
 
-    e.Column.CanUserSort = true;
+    MainGrid.Columns.Clear();
 
-    if (e.PropertyType.Namespace != null && e.PropertyType.Namespace.Contains("Domain.Value")) {
-      var subProps = e.PropertyType.GetProperties();
-
-      if (subProps.Any(p => p.Name == "Value")) {
-        e.Column.SortMemberPath = $"{e.PropertyName}.Value";
-      }
-      else if (subProps.Length > 0) {
-        e.Column.SortMemberPath = $"{e.PropertyName}.{subProps[0].Name}";
-      }
-    }
-
-    if (e.Column is DataGridTextColumn textColumn && textColumn.Binding is Binding binding) {
-      if (e.PropertyType.IsEnum)
-        binding.Converter = new EnumDescriptionConverter();
-      else if (e.PropertyType.Namespace != null && e.PropertyType.Namespace.Contains("Domain.Value"))
-        binding.Converter = new DomainObjectConverter();
-      else {
-        var group = new ConverterGroup { new DomainObjectConverter() };
-        binding.Converter = group;
-      }
+    foreach (var config in (IEnumerable<IColumnConfig>)ViewModel.ColumnConfigs) {
+      var column = new DataGridTextColumn {
+        Header = config.Header,
+        Binding = new Binding(config.PropertyPath) {
+          Converter = config.Converter ?? new DomainObjectConverter()
+        },
+        SortMemberPath = config.SortPath
+      };
+      MainGrid.Columns.Add(column);
     }
   }
 

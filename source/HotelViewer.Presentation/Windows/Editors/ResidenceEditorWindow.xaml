@@ -5,27 +5,27 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:HotelViewer.Presentation.Windows.Editors"
         mc:Ignorable="d"
-        Title="Изменение записи о проживании" Height="400" Width="500">
+        Title="Изменение записи о проживании" Height="500" Width="500">
   <StackPanel Margin="20">
     <TextBlock Text="ID (число):"/>
-    <TextBox x:Name="TxtId" Margin="0,5"/>
+    <TextBox x:Name="TxtId" Style="{StaticResource TextBox}" Margin="0,5"/>
 
     <TextBlock Text="Номер:"/>
-    <TextBox x:Name="TxtRoomNumber" Margin="0,5"/>
+    <TextBox x:Name="TxtRoomNumber" Style="{StaticResource TextBox}" Margin="0,5"/>
 
     <TextBlock Text="Идентификатор отеля:"/>
-    <TextBox x:Name="TxtHotelId" Margin="0,5"/>
+    <TextBox x:Name="TxtHotelId" Style="{StaticResource TextBox}" Margin="0,5"/>
 
     <TextBlock Text="Идентификатор проживающего:"/>
-    <TextBox x:Name="TxtResidentId" Margin="0,5"/>
+    <TextBox x:Name="TxtResidentId" Style="{StaticResource TextBox}" Margin="0,5"/>
 
-    <TextBlock Text="На сколько:"/>
-    <TextBox x:Name="TxtDaysPerNight" Margin="0,5"/>
+    <TextBlock Text="На сколько дней:"/>
+    <TextBox x:Name="TxtDaysPerNight" Style="{StaticResource TextBox}" Margin="0,5"/>
 
     <TextBlock Text="Дата и время прибытия:"/>
-    <TextBox x:Name="TxtDateTime" Margin="0,5"/>
+    <TextBox x:Name="TxtDateTime" Style="{StaticResource TextBox}" Margin="0,5"/>
 
-    <Button Content="Сохранить" Click="BtnSave_Click" Margin="0,20" Height="30"/>
+    <Button Content="Сохранить" Style="{StaticResource SuccessButton}" Click="BtnSave_Click" Margin="0,10, 0, 0"/>
   </StackPanel>
 </Window>
 

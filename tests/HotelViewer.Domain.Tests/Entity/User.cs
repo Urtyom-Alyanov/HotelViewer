@@ -1,11 +1,10 @@
-﻿using HotelViewer.Domain.Entity;
+using HotelViewer.Domain.Entity;
 
 namespace HotelViewer.Domain.Tests.Entity;
 
 public class UserTest {
   [Fact]
-  public void HashNewPassword_ShouldGenerateHashAndSalt()
-  {
+  public void HashNewPassword_ShouldGenerateHashAndSalt() {
     // Arrange
     var user = new User(
       new Username("admin"),
@@ -28,8 +27,7 @@ public class UserTest {
   [InlineData("password123")]
   [InlineData("!@#$%^&*()_+")]
   [InlineData("Кириллица_Тоже_Работает")]
-  public void VerifyPassword_WithCorrectPassword_ShouldReturnTrue(string password)
-  {
+  public void VerifyPassword_WithCorrectPassword_ShouldReturnTrue(string password) {
     // Arrange
     var user = new User(new Username("user"), [], [], UserRole.Reader);
     user.HashNewPassword(password);
@@ -42,8 +40,7 @@ public class UserTest {
   }
 
   [Fact]
-  public void VerifyPassword_WithWrongPassword_ShouldReturnFalse()
-  {
+  public void VerifyPassword_WithWrongPassword_ShouldReturnFalse() {
     // Arrange
     var user = new User(new Username("user"), [], [], UserRole.Reader);
     user.HashNewPassword("CorrectPassword");
@@ -56,8 +53,7 @@ public class UserTest {
   }
 
   [Fact]
-  public void HashNewPassword_ShouldProduceDifferentHashesForSamePassword()
-  {
+  public void HashNewPassword_ShouldProduceDifferentHashesForSamePassword() {
     // Arrange
     var user1 = new User(new Username("u1"), [], [], UserRole.Reader);
     var user2 = new User(new Username("u2"), [], [], UserRole.Reader);

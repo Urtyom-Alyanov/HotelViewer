@@ -2,6 +2,7 @@ using System.Windows;
 using HotelViewer.ApplicationLayer.Services;
 using HotelViewer.Domain.Entity;
 using HotelViewer.Presentation.Infrastructure;
+using HotelViewer.Presentation.Mappers;
 using HotelViewer.Presentation.Windows;
 using HotelViewer.Presentation.Windows.Editors;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,8 @@ namespace HotelViewer.Presentation.ViewModels;
 public class MainViewModel : ViewModelBase {
   private SessionContext Session { get; }
   private readonly IServiceProvider _serviceProvider;
+
+  public static MainViewModel Instance { get; private set; } = null!;
 
   public EntityListViewModel<Hotel, HotelId> Hotels { get; }
   public EntityListViewModel<Resident, ResidentId> Residents { get; }
@@ -48,11 +51,14 @@ public class MainViewModel : ViewModelBase {
     Session = session;
     _serviceProvider = serviceProvider;
 
+    Instance = this;
+
     Hotels = new EntityListViewModel<Hotel, HotelId>(
       hotelService,
       hotelExport,
       session,
       CurrentUser,
+      HotelUiMapper.Columns,
       e => e.Id,
       () => new HotelEditorWindow()
       );
@@ -61,6 +67,7 @@ public class MainViewModel : ViewModelBase {
       residentExport,
       session,
       CurrentUser,
+      ResidentUiMapper.Columns,
       e => e.Id,
       () => new ResidentEditorWindow()
       );
@@ -69,6 +76,7 @@ public class MainViewModel : ViewModelBase {
       residenceExport,
       session,
       CurrentUser,
+      ResidenceUiMapper.Columns,
       e => e.ResidenceId,
       () => new ResidenceEditorWindow()
       );
@@ -77,6 +85,7 @@ public class MainViewModel : ViewModelBase {
       organizationExport,
       session,
       CurrentUser,
+      OrganizationUiMapper.Columns,
       e => e.Id,
       () => new OrganizationEditorWindow()
       );
@@ -85,6 +94,7 @@ public class MainViewModel : ViewModelBase {
       roomExport,
       session,
       CurrentUser,
+      RoomUiMapper.Columns,
       e => e.RoomId,
       () => new RoomEditorWindow()
       );
@@ -102,6 +112,7 @@ public class MainViewModel : ViewModelBase {
       userExport,
       session,
       CurrentUser,
+      UserUiMapper.Columns,
       e => e.Username,
       () => new UserEditorWindow()
     );

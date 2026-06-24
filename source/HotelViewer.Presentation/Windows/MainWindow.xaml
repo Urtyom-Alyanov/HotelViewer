@@ -8,21 +8,6 @@
         xmlns:converters="clr-namespace:HotelViewer.Presentation.Converters"
         mc:Ignorable="d"
         Title="Управление гостиницами" Height="450" Width="800">
-  <Window.Resources>
-    <converters:RoleToVisibilityConverter x:Key="RoleToVis"/>
-
-    <Style x:Key="TableToolbox" TargetType="StackPanel">
-      <Setter Property="Orientation" Value="Horizontal"/>
-      <Setter Property="Margin" Value="10"/>
-      <Setter Property="HorizontalAlignment" Value="Right"/>
-    </Style>
-
-    <Style TargetType="Button">
-      <Setter Property="Padding" Value="15,5"/>
-      <Setter Property="Margin" Value="5,0"/>
-    </Style>
-  </Window.Resources>
-
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
@@ -40,15 +25,9 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
           <Button
             Command="{Binding LogoutCommand}"
-            Background="#D23333"
-            Foreground="White"
             Content="Выйти"
+            Style="{StaticResource DangerButton}"
             >
-            <Button.Resources>
-              <Style TargetType="Border">
-                <Setter Property="CornerRadius" Value="3"/>
-              </Style>
-            </Button.Resources>
           </Button>
         </StackPanel>
       </Grid>

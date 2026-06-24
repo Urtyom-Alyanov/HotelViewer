@@ -1,4 +1,4 @@
-﻿namespace HotelViewer.ApplicationLayer;
+namespace HotelViewer.ApplicationLayer;
 
 public class DomainObjectFormatter {
   public static string Format(object? value) {

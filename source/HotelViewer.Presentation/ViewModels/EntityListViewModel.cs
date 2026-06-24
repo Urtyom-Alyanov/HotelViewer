@@ -4,6 +4,7 @@ using HotelViewer.ApplicationLayer.Services;
 using HotelViewer.Domain.Entity;
 using HotelViewer.Domain.Helper;
 using HotelViewer.Presentation.Infrastructure;
+using HotelViewer.Presentation.Mappers;
 using HotelViewer.Presentation.Windows.Editors;
 using LanguageExt;
 using Microsoft.Win32;
@@ -16,11 +17,14 @@ public class EntityListViewModel<TEntity, TEntityId>(
   ExportService<TEntity, TEntityId> exportService,
   SessionContext sessionContext,
   User currentUser,
+  List<IColumnConfig> columnConfigs,
   Func<TEntity, TEntityId> idSelector,
   Func<IEntityEditor<TEntity>> editorFactory) : ViewModelBase {
 
   public SessionContext Session => sessionContext;
   public ObservableCollection<TEntity> Items { get; } = new();
+
+  public List<IColumnConfig> ColumnConfigs => columnConfigs;
 
   private TEntity? _selectedItem;
   public TEntity? SelectedItem {
@@ -39,22 +43,22 @@ public class EntityListViewModel<TEntity, TEntityId>(
   private FilterOp _selectedOp = FilterOp.Like;
   public FilterOp SelectedOp { get => _selectedOp; set { _selectedOp = value; OnPropertyChanged(); } }
 
+  private static readonly string[] blackList = ["PasswordHash", "PasswordSalt"];
+
   public List<string> AvailableProperties => typeof(TEntity)
     .GetProperties()
     .Select(p => p.Name)
+    .Where(p => !blackList.Contains(p))
     .ToList();
 
-  public void ApplySort(string propertyName, bool ascending)
-  {
+  public void ApplySort(string propertyName, bool ascending) {
     if (string.IsNullOrEmpty(propertyName)) return;
 
     var param = System.Linq.Expressions.Expression.Parameter(typeof(TEntity), "e");
     System.Linq.Expressions.Expression body = param;
 
     foreach (var member in propertyName.Split('.'))
-    {
       body = System.Linq.Expressions.Expression.PropertyOrField(body, member);
-    }
 
     var conversion = System.Linq.Expressions.Expression.Convert(body, typeof(object));
     var selector = System.Linq.Expressions.Expression.Lambda<Func<TEntity, object>>(conversion, param);
@@ -64,8 +68,7 @@ public class EntityListViewModel<TEntity, TEntityId>(
     LoadData();
   }
 
-  private void LoadData()
-  {
+  private void LoadData() {
     service.FindMany(filter: BuildFilter(), sort: _currentSort).Match(
       err => MessageBox.Show(err.Message),
       list => {
@@ -110,7 +113,22 @@ public class EntityListViewModel<TEntity, TEntityId>(
     var conversion = System.Linq.Expressions.Expression.Convert(prop, typeof(object));
     var selector = System.Linq.Expressions.Expression.Lambda<Func<TEntity, object>>(conversion, param);
 
-    return Some(new Filter<TEntity>(new FilterCriterion<TEntity>(selector, SearchText, SelectedOp)));
+    object value;
+    if (SelectedOp == FilterOp.In) {
+      var parts = SearchText
+        .Split([',', ';'], StringSplitOptions.RemoveEmptyEntries)
+        .Select(p => p.Trim())
+        .ToList();
+
+      var propType = prop.Type;
+      if (propType == typeof(int))
+        value = parts.Select(p => int.TryParse(p, out var i) ? i : 0).ToList();
+      else value = parts;
+
+    }
+    else value = SearchText;
+
+    return Some(new Filter<TEntity>(new FilterCriterion<TEntity>(selector, value, SelectedOp)));
   }
 
   public RelayCommand EditCommand => new(_ => {

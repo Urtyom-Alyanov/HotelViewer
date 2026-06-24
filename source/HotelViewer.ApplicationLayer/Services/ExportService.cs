@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using ClosedXML.Excel;
 using HotelViewer.ApplicationLayer.Errors;
 using HotelViewer.Domain.Repository;
 using LanguageExt;
@@ -13,9 +14,9 @@ public class ExportService<TEntity, TEntityId>(IRepository<TEntity, TEntityId> r
   /// </summary>
   /// <param name="filePath">Путь к CSV файлу</param>
   /// <returns>Путь к CSV файлу</returns>
-  public Either<ApplicationError, string> ExportToCsv(string filePath) {
-    return repository.FindMany(None, None, None, None)
-      .MapLeft(err => (ApplicationError)new RepositoryFailure(err))
+  public Either<ApplicationError, string> ExportToCsv(string filePath) =>
+    repository.FindMany(None, None, None, None)
+      .MapLeft<ApplicationError>(err => new RepositoryFailure(err))
       .Bind(entities => {
         try {
           var properties = typeof(TEntity)
@@ -44,7 +45,47 @@ public class ExportService<TEntity, TEntityId>(IRepository<TEntity, TEntityId> r
           return Left<ApplicationError, string>(new ValidationError($"Ошибка записи файла: {ex.Message}"));
         }
       });
-  }
+
+  /// <summary>
+  /// Экспортировать отчёт в Excel файл
+  /// </summary>
+  /// <param name="filePath">Путь к XML файлу</param>
+  /// <returns>Путь к XML файлу</returns>
+  public Either<ApplicationError, string> ExportToXML(string filePath)
+  => repository.FindMany(None, None, None, None)
+    .MapLeft<ApplicationError>(err => new RepositoryFailure(err))
+    .Bind(entities => {
+      try {
+        using var workbook = new XLWorkbook();
+        var worksheet = workbook.Worksheets.Add(typeof(TEntity).Name);
+
+        var properties = typeof(TEntity).GetProperties()
+          .Where(p => !p.Name.Contains("Password")).ToList();
+
+        for (int i = 0; i < properties.Count; i++) {
+          var cell = worksheet.Cell(1, i + 1);
+          cell.Value = properties[i].Name;
+          cell.Style.Font.Bold = true;
+          cell.Style.Fill.BackgroundColor = XLColor.LightGray;
+        }
+
+        var list = entities.ToList();
+        for (int row = 0; row < list.Count; row++) {
+          for (int col = 0; col < properties.Count; col++) {
+            var val = properties[col].GetValue(list[row]);
+            worksheet.Cell(row + 2, col + 1).Value = DomainObjectFormatter.Format(val);
+          }
+        }
+
+        worksheet.Columns().AdjustToContents();
+        workbook.SaveAs(filePath);
+
+        return Right<ApplicationError, string>(filePath);
+      }
+      catch (Exception ex) {
+        return Left<ApplicationError, string>(new ValidationError(ex.Message));
+      }
+    });
 
   /// <summary>
   /// Перевод из Value objects в значения

@@ -25,14 +25,18 @@
     <Border Grid.Row="0"  Background="#F9F9F9" BorderBrush="#DDD" BorderThickness="0,0,0,1" Padding="10">
       <StackPanel Orientation="Horizontal"
                   HorizontalAlignment="Right">
-        <TextBlock Text="Поиск по:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+        <TextBlock Text="Фильтр по:" VerticalAlignment="Center" Margin="0,0,5,0"/>
         <ComboBox ItemsSource="{Binding AvailableProperties}"
                   SelectedItem="{Binding SelectedProperty}"
-                  Width="120" Margin="0,0,10,0"/>
+                  Width="100" Margin="0,0,10,0"
+                  Style="{StaticResource ComboBox}"
+                  />
 
         <ComboBox ItemsSource="{Binding AvailableOps}"
                   SelectedItem="{Binding SelectedOp}"
-                  Width="80" Margin="0,0,10,0">
+                  Width="65" Margin="0,0,10,0"
+                  Style="{StaticResource ComboBox}"
+                  >
           <ComboBox.ItemTemplate>
             <DataTemplate>
               <TextBlock Text="{Binding}"/>
@@ -41,10 +45,16 @@
         </ComboBox>
 
         <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                 Width="200" VerticalContentAlignment="Center" Margin="0,0,10,0"/>
+                 Width="200" VerticalContentAlignment="Center" Margin="0,0,10,0"
+                 Style="{StaticResource TextBox}"
+                 >
+          <TextBox.InputBindings>
+            <KeyBinding Key="Enter" Command="{Binding LoadCommand}" />
+          </TextBox.InputBindings>
+        </TextBox>
 
-        <Button Content="Найти" Command="{Binding LoadCommand}" Padding="15,0" Background="#0078D4" Foreground="White"/>
-        <Button Content="Сбросить" Click="ResetSearch_Click" Margin="5,0" Background="Transparent" BorderThickness="0"/>
+        <Button Content="Найти" Command="{Binding LoadCommand}" Style="{StaticResource PrimaryButton}" />
+        <Button Content="Сбросить" Click="ResetSearch_Click" Style="{StaticResource Button}" />
       </StackPanel>
     </Border>
     <StackPanel Grid.Row="1"
@@ -53,38 +63,43 @@
                 Style="{StaticResource TableToolbox}">
 
       <Button Content="Добавить"
+              Style="{StaticResource SuccessButton}"
               Command="{Binding AddCommand}"
               Visibility="{Binding CurrentUser.Role,
                           Converter={StaticResource RoleToVis},
                           ConverterParameter=Redactor}" />
       <Button Content="Обновить список"
+              Style="{StaticResource Button}"
               Command="{Binding LoadCommand}" />
       <Button Content="Изменить"
               Command="{Binding EditCommand}"
+              Style="{StaticResource Button}"
               Visibility="{Binding CurrentUser.Role,
                           Converter={StaticResource RoleToVis},
                           ConverterParameter=Redactor}"/>
       <Button Content="Удалить"
+              Style="{StaticResource DangerButton}"
               Command="{Binding DeleteSelectedCommand}"
               Visibility="{Binding CurrentUser.Role,
                           Converter={StaticResource RoleToVis},
                           ConverterParameter=Redactor}" />
       <Button Content="Экспорт в CSV"
+              Style="{StaticResource SuccessButton}"
               Command="{Binding CSVExport}"
               Visibility="{Binding CurrentUser.Role,
                           Converter={StaticResource RoleToVis},
                           ConverterParameter=Reader}" />
     </StackPanel>
-    <DataGrid Grid.Row="2"
+    <DataGrid x:Name="MainGrid"
+              Grid.Row="2"
               ItemsSource="{Binding Items}"
               SelectedItem="{Binding SelectedItem}"
-              AutoGenerateColumns="True"
+              AutoGenerateColumns="False"
               IsReadOnly="True"
               Margin="5"
               Sorting="DataGrid_OnSorting"
               CanUserSortColumns="True"
-              AutoGeneratingColumn="DataGrid_OnAutoGeneratingColumn"
-              />
+    />
   </Grid>
 </UserControl>
 
