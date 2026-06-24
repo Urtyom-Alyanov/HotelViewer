@@ -176,3 +176,16 @@ P5 --> Admin : Список в UI
     в GitHub через SSH ключ
   - `git clone https://github.com/Urtyom-Alyanov/HotelViewer.git` - HTTPS, ничего не требует, но медленнее.
 2. Запустите сборку приложения (требуется .NET SDK) - `dotnet build -c Release` или `dotnet run -c Release`
+
+### Скачать уже собранный проект
+- [Последняя версия](https://github.com/Urtyom-Alyanov/HotelViewer/releases/tag/latest)
+- [Последний коммит](https://github.com/Urtyom-Alyanov/HotelViewer/releases/tag/master)
+
+## Использование
+
+Для использования проект, требуется скачать .accdb файл, его можно [скачать отсюда](./assets/PureHotels.accdb), после
+загрузки - выберите его. Изначально в ней нет данных - загрузите их с помощью соответствующей кнопки на окне входа.
+
+## Отчёт
+
+Отчёт по практике [выложен тут](./assets/Report.docx). Хранится он в Git LFS.
