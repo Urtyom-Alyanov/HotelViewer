@@ -25,7 +25,7 @@ public partial class HotelEditorWindow : Window, IEntityEditor<Hotel> {
     TxtName.Text = entity.Name;
     TxtPhone.Text = entity.Number.Value;
     TxtAddress.Text = entity.Address.Value;
-    TxtOrgId.Text = entity.OrganizationId.Value.ToString();
+    CmbOrganization.SelectedItem = entity.OrganizationId;
   }
 
   private void TxtPhone_PreviewTextInput(object sender, TextCompositionEventArgs e) {
@@ -47,15 +47,18 @@ public partial class HotelEditorWindow : Window, IEntityEditor<Hotel> {
 
   private void BtnSave_Click(object sender, RoutedEventArgs e) {
     try {
+      var selectedOrgId = CmbOrganization.SelectedValue as OrganizationId;
+      if (selectedOrgId == null) throw new Exception("Выберите организацию!");
+
       if (string.IsNullOrWhiteSpace(TxtName.Text))
         throw new Exception("Название не может быть пустым");
 
       Entity = new Hotel(
-        new HotelId(int.Parse(TxtId.Text)),
+        new HotelId(int.Parse(TxtId.Text == "авто" ? "0" : TxtId.Text)),
         TxtName.Text,
         new PhoneNumber(TxtPhone.Text),
         new Address(TxtAddress.Text),
-        new OrganizationId(int.Parse(TxtOrgId.Text))
+        selectedOrgId
       );
       DialogResult = true;
     }

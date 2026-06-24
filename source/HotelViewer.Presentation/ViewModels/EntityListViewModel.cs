@@ -156,6 +156,18 @@ public class EntityListViewModel<TEntity, TEntityId>(
       );
   }, _ => sessionContext.IsInRole(UserRole.Reader));
 
+  public RelayCommand XLSXExport => new(_ => {
+    var dialog = new SaveFileDialog {
+      Filter = "Excel книга (*.xlsx)|*.xlsx",
+      FileName = $"{typeof(TEntity).Name}_Export_{DateTime.Now:yyyyMMdd}"
+    };
+    if (dialog.ShowDialog() == true)
+      exportService.ExportToXLSX(dialog.FileName).Match(
+        err => MessageBox.Show(err.Message, "Ошибка экспорта"),
+        path => MessageBox.Show($"Данные успешно экспортированы: {path}", "Экспорт")
+      );
+  }, _ => sessionContext.IsInRole(UserRole.Reader));
+
   public RelayCommand DeleteCommand => new(id => {
     if (id is TEntityId entityId) {
       service.DropById(entityId).Match(

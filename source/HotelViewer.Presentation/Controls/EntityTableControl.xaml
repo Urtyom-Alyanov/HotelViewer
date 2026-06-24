@@ -83,9 +83,9 @@
               Visibility="{Binding CurrentUser.Role,
                           Converter={StaticResource RoleToVis},
                           ConverterParameter=Redactor}" />
-      <Button Content="Экспорт в CSV"
+      <Button Content="Экспорт в Excel"
               Style="{StaticResource SuccessButton}"
-              Command="{Binding CSVExport}"
+              Command="{Binding XLSXExport}"
               Visibility="{Binding CurrentUser.Role,
                           Converter={StaticResource RoleToVis},
                           ConverterParameter=Reader}" />

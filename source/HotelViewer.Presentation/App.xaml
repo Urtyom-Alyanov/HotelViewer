@@ -65,6 +65,21 @@
         </Style.Resources>
       </Style>
 
+      <Style x:Key="DatePicker" TargetType="DatePicker">
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Margin" Value="2,5,2,15"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="#CCCCCC"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Style.Resources>
+          <Style TargetType="Border">
+            <Setter Property="CornerRadius" Value="4"/>
+          </Style>
+        </Style.Resources>
+      </Style>
+
       <Style x:Key="Button" TargetType="Button">
         <Setter Property="Background" Value="#E1E1E1"/>
         <Setter Property="Foreground" Value="#333333"/>

@@ -33,7 +33,7 @@ public partial class ResidentEditorWindow : Window, IEntityEditor<Resident> {
   private void BtnSave_Click(object sender, RoutedEventArgs e) {
     try {
       Entity = new Resident(
-        new ResidentId(int.Parse(TxtId.Text)),
+        new ResidentId(int.Parse(TxtId.Text == "авто" ? "0" : TxtId.Text)),
         new FullName(
           TxtLastName.Text,
           TxtFirstName.Text,

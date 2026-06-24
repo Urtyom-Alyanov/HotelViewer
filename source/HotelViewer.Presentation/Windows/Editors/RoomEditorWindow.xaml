@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:HotelViewer.Presentation.Windows.Editors"
+        xmlns:viewModels="clr-namespace:HotelViewer.Presentation.ViewModels"
         mc:Ignorable="d"
         Title="RoomEditorWindow" Height="280" Width="500">
   <StackPanel Margin="20">
@@ -13,13 +14,28 @@
         <ColumnDefinition Width="*"/>
       </Grid.ColumnDefinitions>
       <StackPanel Grid.Column="0">
-        <TextBlock Text="Номер комнаты:"/>
-        <TextBox x:Name="TxtRoomNumber" Style="{StaticResource TextBox}" Margin="2,5"/>
+        <TextBlock Text="Гостиница:"/>
+        <ComboBox x:Name="CmbHotel"
+                  ItemsSource="{Binding Source={x:Static viewModels:MainViewModel.Instance}, Path=Hotels.Items}"
+                  DisplayMemberPath="Name"
+                  SelectedValuePath="Id"
+                  Style="{StaticResource ComboBox}"
+                  Margin="2,5"/>
       </StackPanel>
-      <StackPanel Grid.Column="1">
-        <TextBlock Text="Идентификатор гостиницы:"/>
-        <TextBox x:Name="TxtHotelId" Style="{StaticResource TextBox}" Margin="2,5"/>
-      </StackPanel>
+      <Grid Grid.Column="1">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" >
+          <TextBlock Text="Этаж:" Margin="0 0 10 0"/>
+          <TextBox x:Name="TxtRoomStage" Style="{StaticResource TextBox}" Margin="2,5"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1" >
+          <TextBlock Text="Номер комнаты:"/>
+          <TextBox x:Name="TxtRoomNumber" Style="{StaticResource TextBox}" Margin="2,5"/>
+        </StackPanel>
+      </Grid>
     </Grid>
 
     <TextBlock Text="Тип комнаты:"/>

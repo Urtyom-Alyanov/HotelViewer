@@ -49,9 +49,9 @@ public class ExportService<TEntity, TEntityId>(IRepository<TEntity, TEntityId> r
   /// <summary>
   /// Экспортировать отчёт в Excel файл
   /// </summary>
-  /// <param name="filePath">Путь к XML файлу</param>
-  /// <returns>Путь к XML файлу</returns>
-  public Either<ApplicationError, string> ExportToXML(string filePath)
+  /// <param name="filePath">Путь к XLSX файлу</param>
+  /// <returns>Путь к XLSX файлу</returns>
+  public Either<ApplicationError, string> ExportToXLSX (string filePath)
   => repository.FindMany(None, None, None, None)
     .MapLeft<ApplicationError>(err => new RepositoryFailure(err))
     .Bind(entities => {

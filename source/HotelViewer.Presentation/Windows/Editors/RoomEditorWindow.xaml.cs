@@ -16,21 +16,27 @@ public partial class RoomEditorWindow : Window, IEntityEditor<Room> {
   public Room? Entity { get; private set; }
 
   public void SetEntity(Room entity) {
-    TxtRoomNumber.Text = entity.RoomId.Number.ToDbValue().ToString();
+    TxtRoomNumber.Text = entity.RoomId.Number.Room.ToString();
     TxtRoomNumber.IsEnabled = false;
 
-    TxtHotelId.Text = entity.RoomId.HotelId.Value.ToString();
-    TxtHotelId.IsEnabled = false;
+    TxtRoomStage.Text = entity.RoomId.Number.Stage.ToString();
+    TxtRoomStage.IsEnabled = false;
+
+    CmbHotel.SelectedItem = entity.RoomId.HotelId;
+    CmbHotel.IsEnabled = false;
 
     SelectedRoomType = entity.Type;
   }
 
   private void BtnSave_Click(object sender, RoutedEventArgs e) {
     try {
+      var selectedHotelId = CmbHotel.SelectedValue as HotelId;
+      if (CmbHotel == null) throw new Exception("Выберите отель!");
+
       Entity = new Room(
         new RoomId(
-          RoomNumber.FromDbValue(int.Parse(TxtRoomNumber.Text)),
-          new HotelId(int.Parse(TxtHotelId.Text))
+          new RoomNumber(int.Parse(TxtRoomStage.Text), int.Parse(TxtRoomNumber.Text)),
+          selectedHotelId
           ),
         SelectedRoomType
       );

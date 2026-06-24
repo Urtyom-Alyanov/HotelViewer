@@ -8,7 +8,7 @@
         Title="Изменение организации" Height="260" Width="500">
   <StackPanel Margin="20">
     <TextBlock Text="ID (число):"/>
-    <TextBox x:Name="TxtId" Style="{StaticResource TextBox}" Margin="0,5"/>
+    <TextBox x:Name="TxtId" IsEnabled="False" Text="авто" Style="{StaticResource TextBox}" Margin="0,5"/>
 
     <TextBlock Text="Название:"/>
     <TextBox x:Name="TxtName" Style="{StaticResource TextBox}" Margin="0,5"/>

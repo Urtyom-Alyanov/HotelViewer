@@ -27,7 +27,7 @@ public partial class OrganizationEditorWindow : Window, IEntityEditor<Organizati
         throw new Exception("Название не может быть пустым");
 
       Entity = new Organization(
-        new OrganizationId(int.Parse(TxtId.Text)),
+        new OrganizationId(int.Parse(TxtId.Text == "авто" ? "0" : TxtId.Text)),
         TxtName.Text
       );
 

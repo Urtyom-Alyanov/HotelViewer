@@ -4,11 +4,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:HotelViewer.Presentation.Windows.Editors"
+        xmlns:viewModels="clr-namespace:HotelViewer.Presentation.ViewModels"
         mc:Ignorable="d"
         Title="Изменение отеля" Height="450" Width="500">
   <StackPanel Margin="20">
     <TextBlock Text="ID (число):"/>
-    <TextBox x:Name="TxtId" Style="{StaticResource TextBox}" Margin="0,5"/>
+    <TextBox x:Name="TxtId" IsEnabled="False" Text="авто" Style="{StaticResource TextBox}" Margin="0,5"/>
 
     <TextBlock Text="Название:"/>
     <TextBox x:Name="TxtName" Style="{StaticResource TextBox}" Margin="0,5"/>
@@ -19,8 +20,12 @@
     <TextBlock Text="Телефон Дежурной:"/>
     <TextBox x:Name="TxtPhone" PreviewTextInput="TxtPhone_PreviewTextInput" Style="{StaticResource TextBox}" Margin="0,5"/>
 
-    <TextBlock Text="ID Организации:"/>
-    <TextBox x:Name="TxtOrgId" Style="{StaticResource TextBox}" Margin="0,5"/>
+    <TextBlock Text="Организация:"/>
+    <ComboBox x:Name="CmbOrganization"
+              ItemsSource="{Binding Source={x:Static viewModels:MainViewModel.Instance}, Path=Organizations.Items}"
+              DisplayMemberPath="Name"
+              SelectedValuePath="Id"
+              Style="{StaticResource ComboBox}"/>
 
     <Button Content="Сохранить" Style="{StaticResource SuccessButton}" Click="BtnSave_Click" Margin="0,10, 0, 0" />
   </StackPanel>

@@ -8,7 +8,7 @@
         Title="Изменение проживающего" Height="470" Width="500">
   <StackPanel Margin="20">
     <TextBlock Text="ID (число):"/>
-    <TextBox x:Name="TxtId" Style="{StaticResource TextBox}" Margin="0,5"/>
+    <TextBox IsEnabled="False" Text="авто" x:Name="TxtId" Style="{StaticResource TextBox}" Margin="0,5"/>
     <Grid>
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*"/>

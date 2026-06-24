@@ -9,7 +9,7 @@ public class ResidenceUiMapper {
     new ColumnInfo<Residence>("Номер", e => e.Number, e => e.Number, new DomainObjectConverter()),
     new ColumnInfo<Residence>("Отель", e => e.HotelId, e => e.HotelId, new LookupConverter()),
     new ColumnInfo<Residence>("На сколько дней", e => e.DaysPerNight, e => e.DaysPerNight),
-    new ColumnInfo<Residence>("Время прибытия", e => e.ResidenceAt, e => e.ResidenceAt),
+    new ColumnInfo<Residence>("Дата прибытия", e => e.ResidenceAt, e => e.ResidenceAt, new DateConverter()),
     new ColumnInfo<Residence>("Жилец", e => e.ResidentId, e => e.ResidentId, new LookupConverter()),
   };
 }
