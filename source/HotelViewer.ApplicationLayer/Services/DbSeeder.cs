@@ -32,7 +32,7 @@ public class DbSeeder(
       var hotel = new Hotel(
       hotelId,
       "Отель 'Звезда'",
-      new PhoneNumber("88005553535"),
+      new PhoneNumber("+7 (800) 555-35-35"),
       new Address("г. Москва, ул. Тверская, 1"),
       orgId);
       hotelRepo.Save(hotel);
