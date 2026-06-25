@@ -175,7 +175,7 @@ P5 --> Admin : Список в UI
   - `git clone git@github.com:Urtyom-Alyanov/HotelViewer.git` - SSH (рекомендуется, ибо безопасно), требует авторизации
     в GitHub через SSH ключ
   - `git clone https://github.com/Urtyom-Alyanov/HotelViewer.git` - HTTPS, ничего не требует, но медленнее.
-2. Запустите сборку приложения (требуется .NET SDK) - `dotnet build -c Release` или `dotnet run -c Release`
+2. Запустите сборку приложения (требуется .NET SDK) - `dotnet build -c Release` или/а потом `dotnet run -c Release --project .\source\HotelViewer.Presentation\`
 
 ### Скачать уже собранный проект
 - [Последняя версия](https://github.com/Urtyom-Alyanov/HotelViewer/releases/tag/latest)
