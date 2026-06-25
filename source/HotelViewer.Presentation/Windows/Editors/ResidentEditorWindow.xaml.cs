@@ -28,6 +28,9 @@ public partial class ResidentEditorWindow : Window, IEntityEditor<Resident> {
     TxtAddress.Text = entity.Address.Value;
     SelectedSex = entity.Sex;
     TxtPhone.Text = entity.PhoneNumber.Value;
+
+    DataContext = null;
+    DataContext = this;
   }
 
   private void BtnSave_Click(object sender, RoutedEventArgs e) {

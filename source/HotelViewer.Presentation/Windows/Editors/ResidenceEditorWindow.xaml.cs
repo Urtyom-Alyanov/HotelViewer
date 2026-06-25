@@ -50,6 +50,9 @@ public partial class ResidenceEditorWindow : Window, IEntityEditor<Residence> {
 
     TxtDaysPerNight.Text = entity.DaysPerNight.ToString();
     DatePicker.SelectedDate = entity.ResidenceAt;
+
+    DataContext = null;
+    DataContext = this;
   }
 
   private void OnlyNumbers_PreviewTextInput(object sender, TextCompositionEventArgs e) {

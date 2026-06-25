@@ -25,7 +25,10 @@ public partial class HotelEditorWindow : Window, IEntityEditor<Hotel> {
     TxtName.Text = entity.Name;
     TxtPhone.Text = entity.Number.Value;
     TxtAddress.Text = entity.Address.Value;
-    CmbOrganization.SelectedItem = entity.OrganizationId;
+    CmbOrganization.SelectedValue = entity.OrganizationId;
+
+    DataContext = null;
+    DataContext = this;
   }
 
   private void TxtPhone_PreviewTextInput(object sender, TextCompositionEventArgs e) {

@@ -19,6 +19,9 @@ public partial class OrganizationEditorWindow : Window, IEntityEditor<Organizati
     TxtId.IsEnabled = false;
 
     TxtName.Text = entity.Name;
+
+    DataContext = null;
+    DataContext = this;
   }
 
   private void BtnSave_Click(object sender, RoutedEventArgs e) {
